@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 30
+    },
+    "api/session.js": {
+      "maxDuration": 10
+    },
+    "api/send-portfolio.js": {
+      "maxDuration": 15
+    }
+  }
+}

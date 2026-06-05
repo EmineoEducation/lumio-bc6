@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "titre_rncp": "Manager Marketing & Communication",
+    "bloc": "4-III",
+    "intitule_bloc": "Développer la stratégie créative de la marque dans des supports et contenus originaux et innovants",
+    "epreuve": "Mise en situation professionnelle - Travail individuel dans un cadre collectif - Production écrite et présentation devant le jury",
+    "duree_reelle_min": 210,
+    "note_reflexive": false
+  },
+  "moment_narratif": {
+    "date_fictive": "Lundi 14 avril 2025",
+    "titre_affaire": "Opération PULSE — Lancement créatif de la gamme Lumio Zen Series pour le grand public",
+    "situation": "Lumio Health, jusqu'ici positionnée exclusivement en B2B auprès des DRH et mutuelles, franchit un cap stratégique : le lancement de la Lumio Zen Series, un wearable anti-stress destiné au grand public connecté et urbain (25-45 ans, CSP+). Le CEO Théo Marczak a fixé une date de lancement officielle au 2 juin 2025, journée mondiale de la santé mentale au travail. La directrice marketing Sonia Ferracci dispose de trois semaines pour produire une stratégie créative complète — axes générateurs, idées de contenus et premières réalisations — à présenter au jury interne élargi au partenaire investisseur Northgate Capital, représenté par Jakob Rein, qui conditionne son second tour de table à la cohérence et à l'impact attendu du dispositif créatif.",
+    "enjeu_central": "Construire une stratégie créative de marque différenciante, capable de translater l'expertise medtech de Lumio en émotion grand public, tout en préservant la crédibilité scientifique attendue par les investisseurs et les futurs partenaires B2B2C."
+  },
+  "commanditaire": {
+    "nom": "Sonia Ferracci",
+    "role": "Directrice Marketing Lumio Health"
+  },
+  "competences": [
+    {
+      "code": "C.20-III",
+      "label": "Définir les axes générateurs des contenus de la marque",
+      "rncp": "Définir les axes générateurs des contenus de la marque, en traduisant l'expression de sa proposition de valeur et de son message en concepts créatifs tenant compte des caractéristiques, besoins et aspirations de son public cible, afin de canaliser le travail des équipes créatives.",
+      "placeholder": "Identifiez et formulez 3 axes générateurs de contenus pour la Lumio Zen Series. Pour chaque axe, précisez : le concept créatif central, le lien avec la proposition de valeur de Lumio Health, les insights cibles qui le légitiment, et les supports/canaux prioritaires sur lesquels il se déploie. Montrez comment ces axes forment un système cohérent capable de canaliser le travail des équipes créatives.",
+      "min_mots": 250,
+      "mots_cles": [
+        "axe générateur",
+        "proposition de valeur",
+        "concept créatif",
+        "public cible",
+        "insight",
+        "cohérence éditoriale",
+        "canaux de communication",
+        "plateforme de marque",
+        "message clé",
+        "territoire créatif"
+      ],
+      "conseil": "Ancrez chaque axe dans un insight consommateur précis issu du brief Sonia. Distinguez clairement axe générateur (le 'pourquoi créatif') et déclinaison canal (le 'comment'). Un axe solide tient en une phrase-concept mémorable et se décline naturellement sur au moins trois supports différents."
+    },
+    {
+      "code": "C.21-III",
+      "label": "Générer des idées originales et innovantes de contenus de marque",
+      "rncp": "Générer des idées originales et innovantes de contenus de marque et de nouveaux formats, en s'assurant de l'adéquation des propositions des équipes créatives avec l'identité de la marque, les attentes de la cible et les canaux et supports utilisés, afin de capter l'attention et d'engager l'audience du public visé.",
+      "placeholder": "Proposez un portefeuille de 4 à 6 idées de contenus originaux pour la campagne PULSE, dont au moins une idée exploitant un format innovant (IA générative, expérience immersive, format interactif, etc.). Pour chaque idée, précisez le format, le canal, la mécanique d'engagement, le lien avec l'identité Lumio et les raisons pour lesquelles elle se démarque de la concurrence wellness/medtech.",
+      "min_mots": 220,
+      "mots_cles": [
+        "idée de contenu",
+        "format innovant",
+        "engagement",
+        "originalité",
+        "identité de marque",
+        "différenciation",
+        "audience",
+        "storytelling",
+        "interactivité",
+        "nouvelle technologie"
+      ],
+      "conseil": "Variez les registres créatifs : une idée émotionnelle, une idée éducative, une idée participative, une idée technologique. Justifiez l'adéquation de chaque format au comportement digital réel de votre cible CSP+ 25-45 ans. Évitez les idées génériques déjà surexploitées dans le secteur wellness."
+    },
+    {
+      "code": "C.22-III",
+      "label": "Concrétiser les idées générées dans les différents canaux et supports de communication",
+      "rncp": "Concrétiser les idées générées dans les différents canaux et supports de communication de la marque, en déployant des techniques narratives et de design privilégiant l'interactivité et favorisant la réussite et l'empreinte durable de l'expérience utilisateur, afin de susciter l'engagement et l'adhésion du public cible.",
+      "placeholder": "Sélectionnez deux idées du portefeuille précédent et concrétisez-les sous forme de maquettes narratives ou de scripts créatifs détaillés. Décrivez précisément les techniques narratives et de design employées, la mécanique d'interactivité prévue, et expliquez en quoi l'expérience utilisateur créée sera mémorable et laissera une empreinte durable dans l'esprit de la cible.",
+      "min_mots": 200,
+      "mots_cles": [
+        "technique narrative",
+        "design",
+        "interactivité",
+        "expérience utilisateur",
+        "empreinte",
+        "engagement",
+        "maquette",
+        "script créatif",
+        "immersion",
+        "adhésion"
+      ],
+      "conseil": "Soyez opérationnel : un jury doit pouvoir visualiser concrètement ce que le public verra, lira ou vivra. Articulez narration (le récit, le ton, la structure dramatique) et design (la forme visuelle, les intentions graphiques, l'ergonomie). Montrez comment l'interactivité n'est pas un gadget mais un levier d'adhésion à la marque."
+    }
+  ],
+  "livrable": {
+    "format": "Note stratégique créative structurée en trois parties correspondant aux trois compétences, accompagnée de la présentation orale devant le jury. La production écrite inclut : la plateforme d'axes générateurs (C.20-III), le portefeuille d'idées de contenus (C.21-III) et les deux concrétisations créatives détaillées (C.22-III). Chaque partie doit être clairement identifiée.",
+    "total_mots_min": 520,
+    "note_reflexive_min": 100
+  },
+  "jury_criteres_eliminatoires": [
+    "Absence de distinction claire entre les trois compétences évaluées dans la production écrite : les rôles respectifs de la stratège créative (définition des axes), du directeur créatif (génération d'idées) et du concepteur-rédacteur (concrétisation) doivent être explicitement assumés et articulés.",
+    "Aucun indicateur d'impact mesurable n'est associé aux axes générateurs ou aux idées de contenus proposés (pas de KPI d'engagement, de portée, de mémorisation ou de conversion mentionnés).",
+    "Les axes générateurs ne sont pas ancrés dans la proposition de valeur documentée de Lumio Health ni dans des insights cibles identifiables ; ils restent génériques et interchangeables avec n'importe quelle marque wellness.",
+    "Les idées de contenus proposées ne comportent aucune dimension innovante vérifiable : absence totale de nouveaux formats, d'approches interactives ou d'usage de technologies émergentes.",
+    "La concrétisation créative se limite à une description sommaire sans maquette narrative, script ou description précise de l'expérience utilisateur, rendant impossible l'évaluation de la qualité professionnelle d'exécution.",
+    "Les propositions créatives ignorent la cohérence entre l'identité de marque medtech de Lumio et les codes visuels/narratifs choisis, créant une rupture dommageable avec le positionnement scientifique de l'entreprise."
+  ],
+  "documents_fictifs": [
+    {
+      "id": "DOC-01",
+      "type": "Brief créatif",
+      "expediteur": "Sonia Ferracci",
+      "objet": "Brief Opération PULSE — Lancement Lumio Zen Series Grand Public",
+      "role_narratif": "Document fondateur de la mise en situation. Présente la proposition de valeur de Lumio Health, les caractéristiques de la cible grand public, les contraintes identitaires de la marque, les canaux prioritaires retenus et les livrables créatifs attendus pour le 2 juin. Sert de boussole pour l'ensemble des compétences.",
+      "acte": 1
+    },
+    {
+      "id": "DOC-02",
+      "type": "Étude insights cible",
+      "expediteur": "Yassine Morel",
+      "objet": "Résultats quali — Baromètre stress & bien-être connecté 2025 (panel 800 urbains CSP+)",
+      "role_narratif": "Nourrit la compétence C.20-III en fournissant les insights consommateurs nécessaires à la construction des axes générateurs. Révèle trois tensions profondes : le déni du stress, la méfiance envers la technologie intrusive et le besoin de preuves scientifiques accessibles.",
+      "acte": 1
+    },
+    {
+      "id": "DOC-03",
+      "type": "Analyse concurrentielle créative",
+      "expediteur": "Yassine Morel",
+      "objet": "Benchmark créatif secteur wellness & medtech — Territoires saturés et espaces libres",
+      "role_narratif": "Alimente la compétence C.21-III en cartographiant les codes créatifs déjà exploités par Withings, Fitbit, Calm et Headspace. Identifie les formats innovants encore peu investis dans l'espace medtech francophone, ouvrant des pistes de différenciation.",
+      "acte": 2
+    },
+    {
+      "id": "DOC-04",
+      "type": "Email interne",
+      "expediteur": "Théo Marczak",
+      "objet": "RE: PULSE — Exigences Northgate Capital sur le volet créatif",
+      "role_narratif": "Introduit une contrainte narrative majeure : Jakob Rein (Northgate) exige que le dispositif créatif intègre des mécaniques de mesure d'impact explicites et que la crédibilité scientifique soit préservée dans tous les formats. Crée une tension productive entre audace créative et rigueur medtech.",
+      "acte": 2
+    },
+    {
+      "id": "DOC-05",
+      "type": "Compte rendu de réunion",
+      "expediteur": "Camille Ott",
+      "objet": "Retours réunion transversale B2B/B2C — Contraintes identitaires non négociables pour la Zen Series",
+      "role_narratif": "Précise les garde-fous créatifs issus des partenaires B2B existants (mutuelles, DRH) : certains codes visuels et narratifs doivent rester compatibles avec les usages professionnels pour ne pas fragiliser les contrats en cours. Complexifie l'équilibre entre audace grand public et sobriété corporate.",
+      "acte": 3
+    },
+    {
+      "id": "DOC-06",
+      "type": "Moodboard partiel",
+      "expediteur": "Yassine Morel",
+      "objet": "Premières directions artistiques explorées — Zen Series (version de travail)",
+      "role_narratif": "Fournit une base visuelle et narrative incomplète que l'apprenant doit critiquer, enrichir ou réorienter dans sa production C.22-III. Propose trois univers graphiques : biomimétisme, minimalisme data-viz, et réalisme émotionnel. Déclenche une prise de position créative.",
+      "acte": 3
+    },
+    {
+      "id": "DOC-07",
+      "type": "Email externe",
+      "expediteur": "Jakob Rein",
+      "objet": "Questions préalables à la présentation du 14 avril — Northgate Capital",
+      "role_narratif": "Liste cinq questions précises de l'investisseur sur la stratégie créative : différenciation, indicateurs d'engagement attendus, cohérence identitaire, innovation format et budget créatif. Structure implicitement les critères d'évaluation du jury et pousse l'apprenant à anticiper les objections.",
+      "acte": 4
+    },
+    {
+      "id": "DOC-08",
+      "type": "Message Teams",
+      "expediteur": "Sonia Ferracci",
+      "objet": "Dernier brief avant remise — Points de vigilance absolus",
+      "role_narratif": "Rappel urgent de Sonia la veille de la remise : deux axes générateurs ont été rejetés en pré-comité car jugés 'trop génériques' et 'déjà vus chez Calm'. L'apprenant doit en tenir compte dans sa note finale et démontrer la singularité de ses propositions. Crée une pression temporelle et qualitative réaliste.",
+      "acte": 5
+    }
+  ],
+  "easter_egg": {
+    "type": "whatsapp",
+    "personnages": [
+      "Yassine Morel",
+      "Camille Ott"
+    ],
+    "tension_revelee": "Yassine confie à Camille que le moodboard envoyé (DOC-06) a été volontairement épuré sur instruction de Théo, qui aurait écarté une direction créative jugée 'trop risquée' — un concept immersif en réalité augmentée testant la réponse émotionnelle en temps réel — par crainte de la réaction de Northgate. Yassine pense que c'était pourtant la proposition la plus différenciante. Camille répond qu'elle a entendu la même chose de la bouche de Jakob Rein lui-même lors d'un déjeuner informel, et que Northgate aurait en réalité adoré cette idée. Les deux s'interrogent sur qui a vraiment pris la décision et pourquoi Théo l'a cachée à Sonia."
+  }
+}

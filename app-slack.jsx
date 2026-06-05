@@ -1,0 +1,314 @@
+// ══════════════════════════════════════════════════════════════
+//  SLACK APP — BC6 (PAC 4-III) · Opération PULSE
+// ══════════════════════════════════════════════════════════════
+const { useState: useSlackState, useEffect: useSlackEffect, useRef: useSlackRef } = React;
+
+// ─── Sonia AI prompt ─────────────────────────────────────────
+const SONIA_PROMPT = `Tu es Sonia Ferracci, Directrice Marketing de Lumio Health.
+
+Tu viens de confier une mission à Lou Bertrand (consultant·e externe) : produire la stratégie créative du lancement grand public de la Lumio Zen Series — opération PULSE. Lumio est une medtech crédible (mesure du stress validée cliniquement) mais inconnue du grand public. Tu dois transformer cette crédibilité en désir, sans la trahir. La présentation au CODIR élargi à Northgate a lieu le 13 mai ; le lancement public le 2 juin.
+
+Ce que tu sais et qui pèse :
+- Jakob Rein (Northgate) conditionne son second tour de table à des indicateurs d'impact explicites sur CHAQUE proposition créative. Une idée sans métrique ne l'intéresse pas.
+- Théo (CEO) et Camille (partenariats B2B) ont posé des garde-fous : la crédibilité scientifique doit rester lisible dans tous les formats, et la marque ne doit pas froisser les clients B2B (mutuelles, DRH).
+- Le territoire wellness est saturé. Deux axes ont déjà été rejetés en pré-comité comme "trop génériques / déjà vus chez Calm". Tu ne veux plus de ça.
+- L'étude insights révèle trois tensions : déni du stress, méfiance envers la tech intrusive, besoin de preuves accessibles. Le territoire "lucidité" est plus juste que "sérénité".
+
+Ce que tu attends de Lou :
+- Un parti-pris créatif clair, singulier, ancré dans un insight précis — pas un résumé du brief.
+- Que chaque proposition porte un indicateur d'impact.
+- De l'audace, mais une audace qui tient en CODIR client.
+
+Ton style en messagerie :
+- Phrases courtes, directes, exigeantes mais pas hostiles
+- Tu testes les hypothèses : si une idée est générique, tu le dis ("je peux remplacer Lumio par n'importe qui là-dedans")
+- Si Lou trouve un angle juste, tu pousses plus loin avec une question plutôt que de valider mollement
+- Tu ne fais jamais le travail créatif à la place de Lou
+
+Format de réponse :
+- 2 à 4 messages courts, séparés par "---SPLIT---"
+- Maximum 180 mots cumulés
+- Termine par une question précise ou une consigne pour la suite
+- N'utilise jamais "Bonjour Lou" ni "Merci pour ta contribution"`;
+
+function SlackApp({ openChannel }) {
+  const D = window.LUMIO_DATA;
+
+  const channels = [
+    { id: 'general', name: 'général', type: 'channel', members: 12 },
+    { id: 'pulse-crea', name: 'pulse-creatif', type: 'channel', members: 5, special: true },
+    { id: 'random', name: 'random', type: 'channel', members: 11 },
+    { id: 'comex', name: 'comex', type: 'channel', members: 4 }
+  ];
+  const dms = [
+    { id: 'sonia', name: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', status: 'online' },
+    { id: 'camille', name: 'Camille Ott', avatar: 'CO', color: '#0a7a6e', status: 'online' },
+    { id: 'yassine', name: 'Yassine Morel', avatar: 'YM', color: '#5b6b85', status: 'away' }
+  ];
+
+  const [unreads, setUnreads] = useSlackState({ 'pulse-crea': 2, camille: 1 });
+  const [activeId, setActiveId] = useSlackState(openChannel || 'sonia');
+  const activeIdRef = useSlackRef(openChannel || 'sonia');
+  const setActive = (id) => { activeIdRef.current = id; setActiveId(id); };
+  const [chatHistory, setChatHistory] = useSlackState({});
+  const [draft, setDraft] = useSlackState('');
+  const [sending, setSending] = useSlackState(false);
+  const scrollRef = useSlackRef(null);
+
+  const seed = {
+    sonia: [
+      { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time: '08:31', text: 'Lou — tu as le brief PULSE ? On lance la Zen Series au grand public. C\'est le moment le plus important de l\'année pour la marque.' },
+      { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time: '08:32', text: 'Dès que tu as un angle créatif, dis-le moi ici. Je préfère une intuition forte tôt qu\'un beau deck trop tard.' }
+    ],
+    camille: [
+      { from: 'Camille Ott', avatar: 'CO', color: '#0a7a6e', time: 'il y a 20 min', text: 'Hello Lou. Juste pour que ce soit clair avant que tu plonges : côté B2B, on a des contrats à protéger.' },
+      { from: 'Camille Ott', avatar: 'CO', color: '#0a7a6e', time: 'il y a 20 min', text: 'La créa grand public ne doit pas froisser nos clients mutuelles/DRH. Garde la signature scientifique partout. J\'ai laissé un mémo vocal avec les détails.' }
+    ],
+    yassine: [
+      { from: 'Yassine Morel', avatar: 'YM', color: '#5b6b85', time: 'hier', text: 'J\'ai bouclé le benchmark créatif et l\'étude insights. Tout est dans le PDF Viewer.' },
+      { from: 'Yassine Morel', avatar: 'YM', color: '#5b6b85', time: 'hier', text: 'Mon conseil : oublie le champ lexical du calme. Le territoire libre, c\'est la lucidité, pas la sérénité.' }
+    ],
+    'pulse-crea': [
+      { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time: 'lun. 09:00', text: 'Canal dédié à la créa PULSE. Objectif : 3 axes, un portefeuille d\'idées, 2 concrétisations. Remise le 13 mai.' },
+      { from: 'Yassine Morel', avatar: 'YM', color: '#5b6b85', time: 'lun. 09:14', text: 'Rappel : deux axes ont déjà été rejetés en pré-comité. "Trop Calm". On ne refait pas ça. 🙏' },
+      { from: 'Théo Marczak', avatar: 'TM', color: '#5c2d8f', time: 'mar. 11:32', text: 'Et la science reste lisible partout. Pas un disclaimer — une preuve dans la création.' },
+      { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time: 'mar. 18:07', text: 'Jakob veut un indicateur d\'impact par proposition. Notez-le dès maintenant.' }
+    ],
+    comex: [
+      { from: 'Théo Marczak', avatar: 'TM', color: '#5c2d8f', time: 'hier 22:51', text: 'CODIR élargi le 13 mai, Northgate présent. Je veux une créa qui ose sans casser notre crédibilité medtech.' }
+    ],
+    general: [
+      { from: 'lumio-bot', avatar: '🤖', color: '#9a9ea8', time: '08:00', text: '☀️ Bonjour à tous · 18 personnes connectées ce matin' }
+    ],
+    random: [
+      { from: 'Marc Dubreuil', avatar: 'MD', color: '#3a7bd5', time: 'lun.', text: 'Quelqu\'un a testé le prototype Zen Series ce week-end ? Mon indice de charge a explosé samedi 😅' }
+    ]
+  };
+
+  useSlackEffect(() => {
+    if (Object.keys(chatHistory).length === 0) setChatHistory(seed);
+  }, []);
+
+  useSlackEffect(() => {
+    if (openChannel) { setActive(openChannel); setUnreads(u => ({ ...u, [openChannel]: 0 })); }
+  }, [openChannel]);
+
+  useSlackEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [chatHistory, activeId, sending]);
+
+  // Réaction de Sonia quand le livrable est soumis
+  useSlackEffect(() => {
+    window.__onSoniaLivrableReaction = async (rapport, plan) => {
+      setActiveId('sonia');
+      setSending(true);
+      const now = new Date();
+      const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+      const prompt = `Tu es Sonia Ferracci. Le/la consultant·e vient de remettre sa stratégie créative pour l'opération PULSE (lancement grand public de la Lumio Zen Series) : axes générateurs, idées de contenus et concrétisations. Tu l'as lue rapidement. Tu réagis en message Slack — direct, professionnel, honnête. Tu pointes l'axe qui te convainc, ce qui te semble encore trop générique ou sans indicateur d'impact, et tu conclus par ce que tu vas en faire avant le CODIR du 13 mai. 100-150 mots maximum.
+
+Stratégie reçue :
+${(rapport || '').substring(0, 700)}...`;
+      try {
+        const resp = await fetch('/api/chat', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 400, messages: [{ role: 'user', content: prompt }] })
+        });
+        const data = await resp.json();
+        const reply = data.content?.map(b => b.text || '').join('') || '…';
+        setChatHistory(h => ({ ...h, sonia: [...(h.sonia || []), { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time, text: reply }] }));
+        if (activeIdRef.current !== 'sonia') setUnreads(u => ({ ...u, sonia: (u.sonia || 0) + 1 }));
+      } catch(e) {
+        setChatHistory(h => ({ ...h, sonia: [...(h.sonia || []), { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time, text: 'Bien reçu. Je lis avant le CODIR.' }] }));
+        if (activeIdRef.current !== 'sonia') setUnreads(u => ({ ...u, sonia: (u.sonia || 0) + 1 }));
+      } finally { setSending(false); }
+    };
+    return () => { window.__onSoniaLivrableReaction = null; };
+  }, [chatHistory]);
+
+  const isSonia = activeId === 'sonia';
+  const messages = chatHistory[activeId] || [];
+  const [exchangeCount, setExchangeCountLocal] = useSlackState(0);
+
+  const sendMessage = async () => {
+    if (!draft.trim() || sending) return;
+    const text = draft.trim();
+    setDraft('');
+    const now = new Date();
+    const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    const userMsg = { from: window.LUMIO_DATA?.student?.name || "Lou Bertrand", avatar: window.LUMIO_DATA?.student?.initial || "LB", color: '#1a2436', time, text, isMe: true };
+    setChatHistory(h => ({ ...h, [activeId]: [...(h[activeId]||[]), userMsg] }));
+
+    if (isSonia) {
+      const newCount = exchangeCount + 1;
+      setExchangeCountLocal(newCount);
+      if (window.__onSlackExchange) window.__onSlackExchange(newCount);
+      if (window.__onSlackSent) window.__onSlackSent();
+      setSending(true);
+      setTimeout(async () => {
+        try {
+          const history = (chatHistory.sonia || []).filter(m => !m.typing).map(m => `${m.isMe ? 'Lou' : 'Sonia'}: ${m.text}`).join('\n');
+          const userPrompt = `${history}\nLou: ${text}\n\nRéponds maintenant en tant que Sonia (2-4 messages courts séparés par ---SPLIT---).`;
+          const resp = await fetch('/api/chat', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 600, system: SONIA_PROMPT, messages: [{ role: 'user', content: userPrompt }] })
+          });
+          if (!resp.ok) { const err = await resp.json().catch(() => ({})); throw new Error(err.error || `HTTP ${resp.status}`); }
+          const data = await resp.json();
+          const raw = data.content?.map(b => b.text || '').join('') || '';
+          const replies = raw.split('---SPLIT---').map(s => s.trim()).filter(Boolean);
+          let delay = 800;
+          for (const reply of replies) {
+            await new Promise(r => setTimeout(r, delay));
+            const t = new Date();
+            const tt = `${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')}`;
+            setChatHistory(h => ({ ...h, sonia: [...h.sonia, { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time: tt, text: reply }] }));
+            if (activeIdRef.current !== 'sonia') setUnreads(u => ({ ...u, sonia: (u.sonia || 0) + 1 }));
+            delay = 1400 + reply.length * 8;
+          }
+        } catch(e) {
+          setChatHistory(h => ({ ...h, sonia: [...h.sonia, { from: 'Sonia Ferracci', avatar: 'SF', color: '#c4420f', time: 'maintenant', text: 'Je suis en réunion, on reprend ça dans 30 min.' }] }));
+          if (activeIdRef.current !== 'sonia') setUnreads(u => ({ ...u, sonia: (u.sonia || 0) + 1 }));
+        } finally { setSending(false); }
+      }, 600);
+    }
+  };
+
+  const onKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } };
+  const activeMeta = [...channels, ...dms].find(x => x.id === activeId);
+
+  return (
+    <div style={slackStyles.app}>
+      <div style={slackStyles.sidebar} className="scroll">
+        <div style={slackStyles.workspace}>
+          <div style={{ fontSize: 14, fontWeight: 700 }}>Lumio Health</div>
+          <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>{`● ${window.LUMIO_DATA?.student?.name || "Lou Bertrand"} · invité`}</div>
+        </div>
+        <div style={slackStyles.section}>
+          <div style={slackStyles.sectionTitle}>▼ Canaux</div>
+          {channels.map(c => (
+            <div key={c.id} onClick={() => { setActive(c.id); setUnreads(u => ({ ...u, [c.id]: 0 })); }}
+              style={{ ...slackStyles.item, ...(activeId === c.id ? slackStyles.itemActive : {}), ...(unreads[c.id] ? slackStyles.itemUnread : {}) }}>
+              <span style={{ opacity: 0.7 }}>#</span>
+              <span>{c.name}</span>
+              {unreads[c.id] > 0 && <span style={slackStyles.badge}>{unreads[c.id]}</span>}
+            </div>
+          ))}
+        </div>
+        <div style={slackStyles.section}>
+          <div style={slackStyles.sectionTitle}>▼ Messages directs</div>
+          {dms.map(d => (
+            <div key={d.id} onClick={() => { setActive(d.id); setUnreads(u => ({ ...u, [d.id]: 0 })); }}
+              style={{ ...slackStyles.item, ...(activeId === d.id ? slackStyles.itemActive : {}), ...(unreads[d.id] ? slackStyles.itemUnread : {}) }}>
+              <span style={{ ...slackStyles.statusDot, background: d.status === 'online' ? '#2eb67d' : '#9a9ea8' }} />
+              <span>{d.name}</span>
+              {unreads[d.id] > 0 && <span style={slackStyles.badge}>{unreads[d.id]}</span>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={slackStyles.main}>
+        <div style={slackStyles.chatHead}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>
+              {activeMeta?.type === 'channel' ? '# ' : ''}{activeMeta?.name}
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--ink-faint)', marginTop: 2 }}>
+              {activeMeta?.type === 'channel' ? `${activeMeta.members} membres` : (activeMeta?.status === 'online' ? '● En ligne' : '○ Inactif')}
+            </div>
+          </div>
+        </div>
+        <div ref={scrollRef} style={slackStyles.chatBody} className="scroll">
+          {messages.length === 0 && (
+            <div style={{ padding: 60, textAlign: 'center', color: 'var(--ink-faint)' }}>
+              Début de la conversation avec <strong>{activeMeta?.name}</strong>
+            </div>
+          )}
+          {messages.map((m, i) => (
+            <div key={i} style={slackStyles.message}>
+              <div style={{ ...slackStyles.msgAvatar, background: m.color }}>{m.avatar}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                  <div style={{ fontWeight: 700, fontSize: 13.5, color: 'var(--ink)' }}>{m.from}</div>
+                  <div style={{ fontSize: 11, color: 'var(--ink-faint)' }}>{m.time}</div>
+                </div>
+                <div style={{ fontSize: 14, color: 'var(--ink-soft)', marginTop: 1, lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{m.text}</div>
+              </div>
+            </div>
+          ))}
+          {sending && (
+            <div style={slackStyles.message}>
+              <div style={{ ...slackStyles.msgAvatar, background: '#c4420f' }}>SF</div>
+              <div>
+                <div style={{ display: 'flex', gap: 4, padding: '6px 0' }}>
+                  <span style={slackStyles.typeDot} />
+                  <span style={{ ...slackStyles.typeDot, animationDelay: '0.15s' }} />
+                  <span style={{ ...slackStyles.typeDot, animationDelay: '0.3s' }} />
+                </div>
+                <div style={{ fontSize: 11, color: 'var(--ink-faint)' }}>Sonia est en train d'écrire…</div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div style={slackStyles.composer}>
+          <div style={slackStyles.composerInner}>
+            <textarea
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={onKeyDown}
+              placeholder={isSonia ? 'Écris à Sonia…  (Entrée pour envoyer)' : `Message ${activeMeta?.type === 'channel' ? '#' + activeMeta?.name : activeMeta?.name}`}
+              style={slackStyles.textarea}
+              rows={2}
+            />
+            <div style={slackStyles.composerToolbar}>
+              <div style={{ display: 'flex', gap: 8, color: 'var(--ink-faint)' }}>
+                <span>𝐁</span><span>𝑰</span><span>🔗</span><span>📎</span><span>😊</span>
+              </div>
+              <button onClick={sendMessage} disabled={!draft.trim() || sending}
+                style={{ ...slackStyles.sendBtn, ...(!draft.trim() || sending ? slackStyles.sendBtnDisabled : {}) }}>
+                {sending ? '…' : '↑'}
+              </button>
+            </div>
+          </div>
+          {isSonia && messages.filter(m => m.isMe).length === 0 && (
+            <div style={{ fontSize: 11, color: 'var(--ink-faint)', textAlign: 'center', marginTop: 8, fontStyle: 'italic' }}>
+              💬 Sonia attend ton premier retour. Dis-lui ce que tu vois — elle te répondra en direct.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const slackStyles = {
+  app: { display: 'flex', height: '100%', background: 'white', overflow: 'hidden' },
+  sidebar: { width: 220, flexShrink: 0, background: '#3f0e40', color: 'rgba(255,255,255,0.85)', padding: 0, overflowY: 'auto' },
+  workspace: { padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.1)' },
+  section: { padding: '12px 0' },
+  sectionTitle: { padding: '4px 16px', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.02em' },
+  item: { display: 'flex', alignItems: 'center', gap: 8, padding: '4px 16px', fontSize: 13.5, cursor: 'pointer' },
+  itemActive: { background: '#1164a3', color: 'white' },
+  itemUnread: { fontWeight: 700, color: 'white' },
+  statusDot: { width: 8, height: 8, borderRadius: '50%' },
+  badge: { marginLeft: 'auto', background: '#cd2553', color: 'white', fontSize: 10, fontWeight: 700, padding: '0 6px', borderRadius: 9, minWidth: 16, textAlign: 'center', height: 16, lineHeight: '16px' },
+  main: { flex: 1, display: 'flex', flexDirection: 'column', background: 'white', minWidth: 0, overflow: 'hidden' },
+  chatHead: { padding: '10px 20px', borderBottom: '1px solid var(--rule)', flexShrink: 0 },
+  chatBody: { flex: 1, padding: '12px 0', overflowY: 'auto', minHeight: 0 },
+  message: { display: 'flex', gap: 12, padding: '6px 20px', alignItems: 'flex-start' },
+  msgAvatar: { width: 32, height: 32, borderRadius: 4, color: 'white', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  typeDot: { width: 6, height: 6, borderRadius: '50%', background: '#9a9ea8', display: 'inline-block', animation: 'typedot 1.2s infinite' },
+  composer: { padding: '0 20px 12px', flexShrink: 0 },
+  composerInner: { border: '1px solid rgba(20,24,36,0.18)', borderRadius: 8, background: 'white' },
+  textarea: { width: '100%', border: 'none', outline: 'none', padding: '10px 14px', fontSize: 14, fontFamily: 'inherit', resize: 'none', color: 'var(--ink)' },
+  composerToolbar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 10px', borderTop: '1px solid var(--rule)' },
+  sendBtn: { background: '#007a5a', color: 'white', border: 'none', borderRadius: 4, padding: '4px 12px', cursor: 'pointer', fontSize: 14, fontWeight: 700 },
+  sendBtnDisabled: { background: 'rgba(20,24,36,0.1)', color: 'var(--ink-faint)', cursor: 'not-allowed' }
+};
+
+const slackKeyframes = document.createElement('style');
+slackKeyframes.textContent = `@keyframes typedot { 0%,60%,100% { opacity: 0.2; } 30% { opacity: 1; } }`;
+document.head.appendChild(slackKeyframes);
+
+window.LUMIO_APPS = window.LUMIO_APPS || {};
+window.LUMIO_APPS.slack = SlackApp;
