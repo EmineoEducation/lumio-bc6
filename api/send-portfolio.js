@@ -21,11 +21,12 @@ async function markCompleted(email) {
   if (!email) return;
   try {
     const hash = hashEmail(email);
-    await fetch(PORTAIL_URL, {
+    const r = await fetch(PORTAIL_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ hash, bloc: BLOC_ID, status: 'completed' }),
     });
+    console.log('markCompleted →', r.status);
   } catch (err) {
     // Non bloquant — la complétion est best-effort
     console.warn('markCompleted error:', err.message);
@@ -53,15 +54,23 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Champs requis manquants : email, portfolioHTML' });
     }
 
+    // ── Complétion portail — TOUJOURS, avant l'email ─────────────────────
+    // Garantit que la coche portail s'écrit même si Resend est mal configuré
+    await markCompleted(email);
+
     if (!resendKey) {
-      console.error('RESEND_API_KEY non configurée — portfolio non envoyé');
-      return res.status(503).json({ error: 'RESEND_API_KEY non configurée', sent: false });
+      console.warn('RESEND_API_KEY non configurée — complétion écrite, email non envoyé');
+      return res.status(200).json({
+        sent: false,
+        completed: true,
+        warning: 'RESEND_API_KEY manquante — email non envoyé mais complétion enregistrée',
+      });
     }
 
-    const nomBloc    = bloc || 'BC1 MSMC';
-    const dateStr    = date || new Date().toLocaleDateString('fr-FR');
-    const prenom     = studentName ? studentName.split(' ')[0] : 'Étudiant(e)';
-    const subject    = `Votre portfolio de compétences PAC — ${nomBloc}`;
+    const nomBloc = bloc || 'BC1 MSMC';
+    const dateStr = date || new Date().toLocaleDateString('fr-FR');
+    const prenom  = studentName ? studentName.split(' ')[0] : 'Étudiant(e)';
+    const subject = `Votre portfolio de compétences PAC — ${nomBloc}`;
 
     // ── Template email Éminéo ──────────────────────────────────────────────
     const html = `<!DOCTYPE html>
@@ -124,7 +133,7 @@ export default async function handler(req, res) {
             <div style="background:#E3FFF0;border-left:4px solid #5DE298;
                         padding:12px 16px;border-radius:0 6px 6px 0;">
               <p style="margin:0;font-size:12px;color:#134547;">
-                ⚠️ Cet email est envoyé depuis une adresse <strong>no-reply</strong>. 
+                ⚠️ Cet email est envoyé depuis une adresse <strong>no-reply</strong>.
                 Pour toute question, contactez directement votre référent Éminéo.
               </p>
             </div>
@@ -166,13 +175,16 @@ export default async function handler(req, res) {
 
     if (!resendRes.ok) {
       console.error('Resend error:', resendData);
-      return res.status(502).json({ error: 'Resend error', details: resendData, sent: false });
+      // Complétion déjà écrite — on retourne 200 avec warning
+      return res.status(200).json({
+        sent: false,
+        completed: true,
+        warning: 'Email non envoyé (erreur Resend) mais complétion enregistrée',
+        details: resendData,
+      });
     }
 
-    // ── Complétion portail (best-effort, non bloquant) ────────────────────
-    await markCompleted(email);
-
-    return res.status(200).json({ sent: true, id: resendData.id });
+    return res.status(200).json({ sent: true, completed: true, id: resendData.id });
 
   } catch (err) {
     console.error('send-portfolio handler error:', err);
