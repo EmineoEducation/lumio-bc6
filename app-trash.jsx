@@ -3,17 +3,17 @@
 // ══════════════════════════════════════════════════════════════
 
 const MESSAGES_WA = [
-  { id: 1, from: 'them', time: '08h14', text: "Salut Théo. J'ai vu le teasing de votre lancement grand public. Audacieux." },
-  { id: 2, from: 'theo', time: '08h31', text: "Trop audacieux pour toi ?" },
-  { id: 3, from: 'them', time: '08h32', text: "Non. Mais tu joues gros. Une medtech qui devient grand public, c'est soit Withings, soit un naufrage de crédibilité. Y'a pas de milieu." },
-  { id: 4, from: 'them', time: '08h33', text: "Vos clients DRH, ils en pensent quoi ?" },
-  { id: 5, from: 'theo', time: '09h02', text: "Camille gère. Mais je ne te cache pas que c'est la vraie tension." },
-  { id: 6, from: 'them', time: '09h03', text: "C'est là que la plupart se plantent. Ils font une campagne grand public \"fun\" et trois mois après les contrats B2B se grippent. Le fun et la confiance institutionnelle, ça ne cohabite pas longtemps." },
-  { id: 7, from: 'them', time: '09h04', text: "Si Northgate te pousse à faire du bruit pour le tour de table, méfie-toi. Le bruit, ça se paie en crédibilité." },
+  { id: 1, from: 'them', time: '08h14', text: "Salut Théo. J'ai vu la sortie de presse Withings ce matin. Tu l'as vue ?" },
+  { id: 2, from: 'theo', time: '08h31', text: "Oui. Je suis en réunion là." },
+  { id: 3, from: 'them', time: '08h32', text: "Ils annoncent la classe IIa pour la ScanWatch 3 dès janvier. Avec remboursement partiel CPAM en vue. C'est plus juste un argument marketing." },
+  { id: 4, from: 'them', time: '08h33', text: "Vous en êtes où sur votre dossier ?" },
+  { id: 5, from: 'theo', time: '09h02', text: "Je ne peux pas en parler ici." },
+  { id: 6, from: 'them', time: '09h03', text: "Je comprends. Mais si le fonds a mis la pression pour accélérer le go-to-market grand public... vous allez avoir un problème de positionnement très vite." },
+  { id: 7, from: 'them', time: '09h04', text: "Un dispositif sans certification qui prétend concurrencer un MDR IIa certifié, ça ne tient pas face aux DRH." },
   { id: 8, from: 'theo', time: '09h17', text: "Je sais." },
-  { id: 9, from: 'theo', time: '09h18', text: "C'est pour ça que je tiens à ce que la science reste au centre de la créa. Pas en caution — au centre." },
-  { id: 10, from: 'them', time: '09h19', text: "Alors tout dépend de qui pilote la création. Si la personne comprend que la preuve EST le concept, et pas l'inverse, tu t'en sors." },
-  { id: 11, from: 'them', time: '09h19', text: "Sinon tu auras une jolie campagne et une marque qui ne veut plus rien dire. Choisis bien." },
+  { id: 9, from: 'theo', time: '09h18', text: "On en parle demain ?" },
+  { id: 10, from: 'them', time: '09h19', text: "Appelle-moi. Et Théo — si Sonia veut lancer la campagne grand public avant la certification, il faut que tu poses un véto formel. Pas juste en réunion." },
+  { id: 11, from: 'them', time: '09h19', text: "C'est ton nom qui est sur la marque, pas le sien." },
 ];
 
 function WhatsAppOverlay({ onClose }) {

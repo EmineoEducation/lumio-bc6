@@ -8,9 +8,9 @@ function VoiceApp() {
   const memos = D.camilleVerbatims.map((v, i) => ({
     ...v,
     id: `cam-${i}`,
-    label: v.title || `Mémo Camille Ott — garde-fous B2B`,
-    date: '12 mai 2025',
-    durationSec: [52, 58, 75][i] || 52
+    label: v.title,
+    date: ['7 juill. 2026', '7 juill. 2026', '7 juill. 2026'][i],
+    durationSec: [102, 58, 75][i]
   }));
 
   const [selectedId, setSelectedId] = useVoiceState(memos[0].id);
@@ -123,7 +123,7 @@ function VoiceApp() {
             </div>
           ) : (
             <div style={voiceStyles.transcriptText}>
-              «&nbsp;{displayTranscript}{playing && '▌'}{position >= selected.durationSec && '&nbsp;»'}
+              \u00AB\u00A0{displayTranscript}{playing && '▌'}{position >= selected.durationSec && '\u00A0\u00BB'}
             </div>
           )}
         </div>

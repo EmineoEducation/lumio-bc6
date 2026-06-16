@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-//  NOTES APP — BC6 (PAC 4-III) · Note Théo + contexte Lumio + perso
+//  NOTES APP — BC2 · Note confidentielle Théo + contexte Lumio
 // ══════════════════════════════════════════════════════════════
 
 function NotesApp({ openNote }) {
@@ -9,24 +9,24 @@ function NotesApp({ openNote }) {
       id: 'theo',
       title: D.theoNote.title,
       date: D.theoNote.date,
-      preview: 'Ce que la Zen Series ne doit pas casser…',
+      preview: 'Réflexions avant board — pour moi seul…',
       theo: D.theoNote
     },
     {
       id: 'contexte',
       title: D.contexte.title,
-      date: 'Mise à jour mai 2025',
-      preview: 'Lumio Health franchit un cap : lancement grand public…',
+      date: 'Mise à jour oct. 2026',
+      preview: 'Lumio Health est une medtech parisienne fondée en 2018…',
       contexte: D.contexte
     },
     {
-      id: 'd1', title: 'PULSE — points à tenir avant le CODIR', date: '12 mai 2025',
-      preview: 'Singularité des axes · indicateur par proposition · garde-fous B2B…',
+      id: 'd1', title: 'Préparer le board — points à tenir', date: '11 oct. 2026',
+      preview: 'Ne pas céder sur la MDR · Churn réel à ne pas lâcher…',
       distractor: false,
-      body: '— Chaque axe doit être SINGULIER : si je peux remplacer "Lumio" par une autre marque wellness, c\'est mort\n— Un indicateur d\'impact par proposition (Jakob l\'exige) : engagement, portée, mémorisation ou intention\n— La preuve scientifique INTÉGRÉE à la création, pas en disclaimer\n— Garde-fous Camille : rien qui froisse les clients B2B (mutuelles, DRH)\n— Territoire "lucidité" plutôt que "sérénité" — sortir du champ lexical du calme\n— Au moins UN format réellement innovant dans le portefeuille (C.21-III)'
+      body: '— Ne pas céder sur le calendrier MDR (réponse TÜV dans 80 jours max)\n— Accord Darty : décider si on le révèle ou pas\n— Churn réel 9 % : si Jakob le sait déjà, je suis grillé\n— Budget : 200K€ c\'est tenable si on séquence bien\n— Question à poser à Jakob : si on attend MDR, la clause de sortie s\'active à quelle date exactement ?'
     },
     {
-      id: 'd2', title: 'Notes perso — week-end', date: '10 mai 2025',
+      id: 'd2', title: 'Notes perso — week-end', date: '10 oct. 2026',
       preview: 'Rucola, vin blanc, appeler maman dimanche…',
       distractor: true,
       body: '— Marché dimanche matin\n— Rucola + pecorino\n— Appeler maman\n— Vin blanc pour samedi soir'

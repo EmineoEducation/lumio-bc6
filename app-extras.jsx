@@ -59,29 +59,30 @@ function FinderApp({ openFolder }) {
 
   const folders = {
     mission: {
-      title: 'Mission Lumio · Opération PULSE',
+      title: 'Mission Lumio · Board BC2',
       items: [
-        { name: 'Brief PULSE — Sonia Ferracci.eml', kind: 'mail', app: 'mail', props: { openId: 'brief' }, label: 'EML' },
-        { name: 'Confidentiel — La barre Northgate.eml', kind: 'mail', app: 'mail', props: { openId: 'jakob' }, label: 'EML' },
-        { name: 'Cadrage créatif PULSE — Sonia.pdf', kind: 'pdf', app: 'pdf', label: 'PDF' },
+        { name: 'Email de mission — Théo Marczak.eml', kind: 'mail', app: 'mail', props: { openId: 'brief' }, label: 'EML' },
+        { name: 'Email confidentiel — Jakob Rein.eml', kind: 'mail', app: 'mail', props: { openId: 'jakob' }, label: 'EML' },
+        { name: 'Deck Board Q3 2026 — Sonia.pdf', kind: 'pdf', app: 'pdf', label: 'PDF' },
         { name: 'Note interne Théo (CONFIDENTIEL).rtf', kind: 'doc', app: 'notes', props: { openNote: 'theo' }, label: 'RTF' },
-        { name: 'Veille créative — Yassine.pdf', kind: 'pdf', app: 'pdf', label: 'PDF' },
-        { name: 'Mémo vocal Camille Ott — garde-fous B2B.m4a', kind: 'audio', app: 'voice', label: 'M4A' },
+        { name: 'Veille concurrentielle — Yassine.pdf', kind: 'pdf', app: 'pdf', label: 'PDF' },
+        { name: 'Verbatims Camille Ott — oct.m4a', kind: 'audio', app: 'voice', label: 'M4A' },
         { name: 'Fiche contexte Lumio Health.pdf', kind: 'pdf', app: 'notes', props: { openNote: 'contexte' }, label: 'PDF' },
-        { name: 'Revue de presse', kind: 'folder', folder: 'press' },
+        { name: 'Revue de presse (3 articles)', kind: 'folder', folder: 'press' },
       ]
     },
     press: {
       title: 'Revue de presse',
       items: [
-        { name: 'ladn-lumio-donnee-vs-calme.html', kind: 'doc', app: 'browser', props: { openTab: 'press-0' }, label: 'WEB' },
-        { name: 'society-arreter-de-respirer.html', kind: 'doc', app: 'browser', props: { openTab: 'fausse-une' }, label: 'WEB' }
+        { name: 'lesechos-mdr-fracture.html', kind: 'doc', app: 'browser', props: { openTab: 'press-0' }, label: 'WEB' },
+        { name: 'hbr-stress-donnee-arme.html', kind: 'doc', app: 'browser', props: { openTab: 'press-1' }, label: 'WEB' },
+        { name: '20mn-apple-watch-confiance.html', kind: 'doc', app: 'browser', props: { openTab: 'press-2' }, label: 'WEB' }
       ]
     },
     guide: {
       title: 'Guide de mission',
       items: [
-        { name: 'guide_mission_bc6.pdf', kind: 'pdf', app: 'pdf', props: { openGuide: true }, label: 'PDF' }
+        { name: 'guide_mission_bc2.pdf', kind: 'pdf', app: 'pdf', props: { openGuide: true }, label: 'PDF' }
       ]
     },
     portraits: {
@@ -145,11 +146,11 @@ window.LUMIO_APPS.finder = FinderApp;
 
 // ─── CALENDAR ─────────────────────────────────────────────────
 function CalendarApp() {
-  const boardDay = 13;  // mardi 13 mai = CODIR élargi + remise
-  const deadlineDay = 13; // remise stratégie créative le 13 mai · 18h
-  const startOffset = 3; // mai 2025 : le 1er est un jeudi → lun=0, jeu=3
+  const boardDay = 16;  // vendredi 16 octobre = board Northgate
+  const deadlineDay = 15; // jeudi 15 oct. = deadline reco
+  const startOffset = 3; // Oct 2026 commence un jeudi → lun=0, jeu=3
 
-  const [currentDay, setCurrentDay] = React.useState(() => window.__getFictifTime ? window.__getFictifTime().day : 8);
+  const [currentDay, setCurrentDay] = React.useState(() => window.__getFictifTime ? window.__getFictifTime().day : 12);
   React.useEffect(() => {
     const id = setInterval(() => {
       if (window.__getFictifTime) setCurrentDay(window.__getFictifTime().day);
@@ -161,12 +162,14 @@ function CalendarApp() {
   const daysLeft = Math.max(0, deadlineDay - today);
 
   const events = {
-    9: [{ label: 'Réception brief PULSE — Sonia', color: '#134547', bg: 'rgba(19,69,71,0.12)' }],
-    12: [{ label: 'Pré-comité créa (2 axes rejetés)', color: '#c4420f', bg: 'rgba(196,66,15,0.12)', bold: true }],
-    13: [{ label: '⚠ Remise stratégie · 18h00 + CODIR élargi Northgate', color: '#fff', bg: '#134547', bold: true }],
-    16: [{ label: 'Brief équipes créatives internes', color: '#0a7a6e', bg: 'rgba(10,122,110,0.12)' }],
-    22: [{ label: 'Production des contenus — sprint', color: '#5c2d8f', bg: 'rgba(92,45,143,0.1)' }],
-    28: [{ label: 'Validation finale créa + médias', color: '#0a7a6e', bg: 'rgba(10,122,110,0.12)' }],
+    13: [{ label: 'Arrivée Jakob à Paris (soir)', color: '#1b3a6b', bg: 'rgba(27,58,107,0.12)' }],
+    14: [{ label: 'Draft reco attendu avant dîner', color: '#c4420f', bg: 'rgba(196,66,15,0.12)', bold: true }],
+    15: [{ label: '⚠ Deadline reco · 20h00', color: '#c4420f', bg: 'rgba(196,66,15,0.2)', bold: true }],
+    16: [{ label: '09h — Board Northgate Capital', color: '#fff', bg: '#1b3a6b', bold: true }],
+    20: [{ label: 'Relance TÜV — MDR', color: '#0a7a6e', bg: 'rgba(10,122,110,0.12)' }],
+    22: [{ label: 'RDV Malakoff Humanis — Camille', color: '#0a7a6e', bg: 'rgba(10,122,110,0.12)' }],
+    27: [{ label: 'CODIR mensuel', color: '#5c2d8f', bg: 'rgba(92,45,143,0.1)' }],
+    30: [{ label: 'Clôture Q4 · reporting', color: '#9a9ea8', bg: 'rgba(154,158,168,0.1)' }],
   };
 
   const urgencyColor = daysLeft <= 3 ? '#c4420f' : daysLeft <= 7 ? '#b85c00' : '#1b3a6b';
@@ -176,8 +179,8 @@ function CalendarApp() {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'white', overflow: 'hidden' }}>
       <div style={{ padding: '14px 22px', borderBottom: '1px solid var(--rule)', display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
         <div>
-          <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--ink)' }}>Mai 2025</div>
-          <div style={{ fontSize: 11, color: 'var(--ink-faint)', marginTop: 2, fontFamily: 'var(--font-mono)' }}>Aujourd'hui — jeudi 8 mai</div>
+          <div style={{ fontSize: 20, fontWeight: 600, color: 'var(--ink)' }}>Octobre 2026</div>
+          <div style={{ fontSize: 11, color: 'var(--ink-faint)', marginTop: 2, fontFamily: 'var(--font-mono)' }}>Aujourd'hui — lundi 12 oct.</div>
         </div>
         <div style={{ flex: 1 }} />
         <div style={{ textAlign: 'center', padding: '8px 16px', background: urgencyBg, borderRadius: 8, border: `1px solid ${urgencyColor}22` }}>
@@ -190,11 +193,11 @@ function CalendarApp() {
         <div style={{ display: 'flex', gap: 24, fontSize: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)' }} />
-            <span style={{ color: 'var(--ink-soft)' }}>Remise stratégie <strong style={{ color: 'var(--ink)' }}>mar. 13 mai 18h</strong></span>
+            <span style={{ color: 'var(--ink-soft)' }}>Deadline reco <strong style={{ color: 'var(--ink)' }}>jeu. 15 oct. 20h</strong></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1b3a6b' }} />
-            <span style={{ color: 'var(--ink-soft)' }}>CODIR élargi <strong style={{ color: 'var(--ink)' }}>mar. 13 mai</strong></span>
+            <span style={{ color: 'var(--ink-soft)' }}>Board Northgate <strong style={{ color: 'var(--ink)' }}>ven. 16 oct.</strong></span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#0a7a6e' }} />
@@ -248,7 +251,7 @@ function CalendarApp() {
       </div>
 
       <div style={{ padding: '10px 22px', borderTop: '1px solid var(--rule)', background: '#fafaf8', fontSize: 11, color: 'var(--ink-mute)', fontStyle: 'italic', flexShrink: 0 }}>
-        Sonia attend un parti-pris créatif singulier. Pas un résumé du brief. Pas une idée déjà vue chez Calm.
+        Jakob Rein attend une recommandation. Pas un audit. Pas une liste d'options.
         <strong style={{ color: 'var(--ink)', fontStyle: 'normal' }}> Un scénario retenu, argumenté, avec objectifs et projection budgétaire.</strong>
       </div>
     </div>

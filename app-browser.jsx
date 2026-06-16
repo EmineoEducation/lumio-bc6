@@ -27,11 +27,11 @@ function BrowserApp({ openTab, openPortrait }) {
     },
     ...D.pressArticles.map((a, i) => ({
       id: `press-${i}`,
-      favicon: (a.media || a.source || 'P')[0],
-      faviconColor: ['#0a3d62', '#a02020', '#e85d3a'][i % 3],
-      host: (a.media || 'presse').toLowerCase().replace(/[^a-z]/g, '') + '.fr',
-      title: a.titre || a.headline,
-      url: 'https://' + ((a.media || 'presse').toLowerCase().replace(/[^a-z]/g, '')) + '.fr/article',
+      favicon: a.source[0],
+      faviconColor: ['#0a3d62', '#a02020', '#e85d3a'][i],
+      host: a.url.split('/')[0],
+      title: a.headline,
+      url: 'https://' + a.url,
       type: 'article',
       article: a
     })),
@@ -43,18 +43,18 @@ function BrowserApp({ openTab, openPortrait }) {
     },
     {
       id: 'tsearch', favicon: '🔍', faviconColor: '#5b6b85', host: 'duckduckgo.com',
-      title: 'stratégie créative wellness — DuckDuckGo',
-      url: 'https://duckduckgo.com/?q=stratégie+créative+wellness+medtech',
+      title: 'mdr classe iia wearable santé — DuckDuckGo',
+      url: 'https://duckduckgo.com/?q=mdr+classe+iia+wearable+santé',
       type: 'search'
     },
-    // Fausse Une Society — apparaît dès l'Acte 2 (>= 20 min de session)
+    // Fausse Une Les Échos — apparaît dès l'Acte 2 (>= 20 min de session)
     ...((window.LUMIO_TIMER_START && (Date.now() - window.LUMIO_TIMER_START) >= 20 * 60 * 1000) ? [{
       id: 'fausse-une',
-      favicon: 'S',
-      faviconColor: '#e2001a',
-      host: (D.fausseUne && D.fausseUne.media === 'Society') ? 'society.fr' : 'society.fr',
-      title: (D.fausseUne && D.fausseUne.titre ? D.fausseUne.titre : 'Et si on arrêtait de vous demander de respirer ?') + ' · Society',
-      url: 'https://society.fr/culture/lumio-zen-series-data-vs-calme',
+      favicon: 'LE',
+      faviconColor: '#0a3d62',
+      host: 'lesechos.fr',
+      title: 'Wearables santé : les mutuelles entrent dans la danse — le B2B explose · Les Échos',
+      url: 'https://lesechos.fr/sante/wearables-mutuelles-mdr-explosion',
       type: 'fausse-une'
     }] : []),
     ...(portraitTab ? [portraitTab] : []),
@@ -129,23 +129,24 @@ function ArticleView({ article }) {
   return (
     <div style={browserStyles.articleWrap}>
       <div style={browserStyles.articleHeader}>
-        <div style={browserStyles.source}>{article.media || article.source}</div>
-        <div style={browserStyles.byline}>Rédaction · {article.date}</div>
+        <div style={browserStyles.source}>{article.source}</div>
+        <div style={browserStyles.byline}>{article.author} · {article.date}</div>
       </div>
-      <h1 style={browserStyles.headline}>{article.titre || article.headline}</h1>
+      <h1 style={browserStyles.headline}>{article.headline}</h1>
+      <p style={browserStyles.lede}>{article.lede}</p>
       <div style={browserStyles.placeholder}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#9a9ea8', letterSpacing: '0.1em' }}>PHOTO ILLUSTRATIVE — wearable Lumio Zen Series</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#9a9ea8', letterSpacing: '0.1em' }}>PHOTO ILLUSTRATIVE — wearable santé sur poignet</span>
       </div>
       <div style={browserStyles.body}>
-        {(article.body || '').split('\n\n').map((p, i) => (
+        {article.body.split('\n\n').map((p, i) => (
           <p key={i}>{p}</p>
         ))}
       </div>
       <div style={browserStyles.related}>
         <div style={browserStyles.relatedTitle}>SUR LE MÊME SUJET</div>
-        <div>· « Wellness : la fin de l'injonction au calme ? »</div>
-        <div>· « Ces marques qui font de la donnée un spectacle »</div>
-        <div>· « Lumio passe au grand public : le pari de la lucidité »</div>
+        <div>· « MDR : pourquoi 40 % des startups healthtech ne suivent pas »</div>
+        <div>· « Apple, Withings, Lumio : qui gagnera le marché du stress ? »</div>
+        <div>· « DRH : les 5 critères qui changent la donne en 2026 »</div>
       </div>
     </div>
   );
@@ -246,16 +247,16 @@ function SearchView() {
     <div style={browserStyles.searchWrap}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28 }}>
         <div style={{ fontFamily: 'var(--font-display)', fontSize: 28, color: '#de5833' }}>DuckDuckGo</div>
-        <input style={browserStyles.searchInput} value="différenciation créative marque wellness medtech" readOnly />
+        <input style={browserStyles.searchInput} value="mdr classe iia wearable santé" readOnly />
       </div>
-      <div style={{ fontSize: 12, color: '#888', marginBottom: 18 }}>Environ 12 700 résultats</div>
+      <div style={{ fontSize: 12, color: '#888', marginBottom: 18 }}>Environ 14 200 résultats</div>
 
       {[
-        { url: 'ladn.eu › marques › sortir-des-codes-wellness', title: 'Wellness : comment se différencier quand tout le monde promet le calme', desc: 'Dégradés bleus, respiration guidée, voix off apaisante : les codes du bien-être connecté se ressemblent tous. Les marques qui émergent sont celles qui osent un territoire de rupture — la donnée, l\'humour ou la preuve scientifique…' },
-        { url: 'strategies.fr › creation › formats-innovants-2025', title: 'Les formats créatifs qui captent l\'attention en 2025', desc: 'IA générative, expériences immersives, contenus interactifs data-driven : tour d\'horizon des formats encore peu investis par les annonceurs santé et bien-être, et des mécaniques d\'engagement associées…' },
-        { url: 'wikipedia.org › Lumio_Health', title: 'Lumio Health — Wikipédia', desc: 'Lumio Health est une medtech française fondée en 2018, spécialisée dans la mesure du stress chronique. L\'entreprise prépare en 2025 le lancement grand public de sa gamme Zen Series…' },
-        { url: 'usine-digitale.fr › lumio-health-grand-public', title: 'Lumio Health passe au grand public avec la Zen Series', desc: 'La startup parisienne, jusque-là cantonnée au B2B, mise sur la mesure objective du stress comme argument de différenciation face aux applications de méditation…' },
-        { url: 'thinkwithgoogle.com › kpi-creatifs-impact', title: 'Mesurer l\'impact d\'une campagne créative : quels KPIs ?', desc: 'Engagement, portée organique, mémorisation assistée, intention d\'achat : guide des indicateurs à associer à chaque axe créatif pour défendre un budget devant un comité d\'investissement…' }
+        { url: 'sante-publique.gouv.fr › reglement-mdr-2024', title: 'Le règlement MDR (UE) 2017/745 — application 2024', desc: 'Le règlement (UE) 2017/745 relatif aux dispositifs médicaux est entré en pleine application. La classification IIa concerne notamment les dispositifs destinés à des fonctions de surveillance physiologique non vitales…' },
+        { url: 'biostream.com › press › certification-2026', title: 'Biostream obtient la certification MDR Classe IIa pour Flow Patch Pro', desc: '« Une étape réglementaire majeure qui valide huit ans de R&D », commente Marc Léger, CEO. La certification ouvre l\'accès aux marchés hospitaliers et permet une revendication médicale étendue.' },
+        { url: 'snitem.fr › classement-mdr-iia-criteres', title: 'Classification MDR IIa : critères et procédure', desc: 'La classe IIa regroupe les dispositifs présentant un risque modéré. La procédure d\'évaluation par un organisme notifié dure en moyenne 14 à 22 mois selon le type de dispositif…' },
+        { url: 'wikipedia.org › Lumio_Health', title: 'Lumio Health — Wikipédia', desc: 'Lumio Health est une medtech française fondée en 2018, spécialisée dans la mesure du stress chronique en milieu professionnel. L\'entreprise a levé 22 M$ en série B en 2025…' },
+        { url: 'usine-digitale.fr › lumio-health-leve-22m', title: 'Lumio Health lève 22 M$ pour passer au grand public', desc: 'La startup parisienne, jusque-là discrète sur le segment B2B, ambitionne d\'atteindre 20 M€ de chiffre d\'affaires en 36 mois. Le tour est mené par le fonds américain Athena Health Capital…' }
       ].map((r, i) => (
         <div key={i} style={browserStyles.searchResult}>
           <div style={{ fontSize: 11, color: '#888' }}>{r.url}</div>
@@ -267,24 +268,22 @@ function SearchView() {
   );
 }
 
-// ── Fausse Une — Society · déclenchée à l'Acte 2 ──────────
+// ── Fausse Une — Les Échos · déclenchée à l'Acte 2 ──────────
 function FausseUneView() {
   const D = window.LUMIO_DATA;
-  const u = D.fausseUne || {};
-  const media = u.media || 'Society';
-  const C = { dark: '#1a1a2e', accent: '#e2001a', muted: '#5b6473', rule: '#e8e6e0' };
-  const paras = (u.body || '').split('\n\n');
+  const u = D.fausseUne;
+  const C = { dark: '#1a1a2e', accent: '#0a3d62', muted: '#5b6473', rule: '#e8e6e0' };
   return (
     <div style={{ background: 'white', minHeight: '100%', fontFamily: 'var(--font-sans)' }}>
 
-      {/* Header magazine */}
+      {/* Header journal */}
       <div style={{ borderBottom: `3px solid ${C.dark}`, padding: '12px 0 10px' }}>
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px' }}>
           <div style={{ fontSize: 10, color: C.muted, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>
-            {media} · Culture & Société · Publié le {u.date || 'mai 2025'}
+            Les Échos · Économie & Entreprises · Mis à jour le {u.date}
           </div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, letterSpacing: '-0.02em', color: C.dark }}>
-            {media}
+            Les Échos
           </div>
         </div>
       </div>
@@ -292,40 +291,43 @@ function FausseUneView() {
       {/* Article */}
       <div style={{ maxWidth: 780, margin: '0 auto', padding: '28px 24px' }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: C.accent, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>
-          Bien-être · Marques · Société
+          Santé au travail · Wearables
         </div>
         <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 34, fontWeight: 700, lineHeight: 1.12, color: C.dark, marginBottom: 16 }}>
-          {u.titre}
+          {u.headline}
         </h1>
+        <p style={{ fontSize: 17, lineHeight: 1.65, color: '#2a3142', fontWeight: 400, marginBottom: 18, borderLeft: `3px solid ${C.accent}`, paddingLeft: 16 }}>
+          {u.chapeau}
+        </p>
 
-        {/* Encadré angle créatif */}
-        <div style={{ background: '#E3FFF0', border: '1px solid #134547', borderRadius: 6, padding: '14px 18px', marginBottom: 22, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-          <div style={{ fontSize: 24, flexShrink: 0 }}>💡</div>
+        {/* Encadré signal fort */}
+        <div style={{ background: '#f0f4fa', border: '1px solid #1b3a6b', borderRadius: 6, padding: '14px 18px', marginBottom: 22, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+          <div style={{ fontSize: 24, flexShrink: 0 }}>🏆</div>
           <div>
-            <div style={{ fontWeight: 700, color: '#134547', fontSize: 13, marginBottom: 4 }}>Signal créatif · À retenir pour votre stratégie</div>
+            <div style={{ fontWeight: 700, color: '#1b3a6b', fontSize: 13, marginBottom: 4 }}>Signal fort B2B · À retenir pour votre recommandation</div>
             <div style={{ fontSize: 12, color: '#2a3142', lineHeight: 1.6 }}>
-              La presse valide le territoire de rupture : sortir du registre du <strong>calme</strong> pour entrer dans celui de la <strong>lucidité</strong>. La donnée comme matière créative, pas comme argument technique. C'est exactement l'angle que vos axes doivent assumer.
+              Un appel d'offres mutuelles de <strong>45 M€ sur 3 ans</strong> vient de s'ouvrir — avec <strong>MDR IIa obligatoire</strong>. Biostream et Neuroflow sont en position de force. Les acteurs non certifiés, dont Lumio, sont mécaniquement exclus à ce stade.
             </div>
           </div>
         </div>
 
         {/* Corps */}
         <div style={{ fontSize: 15, lineHeight: 1.8, color: '#1a1a2e' }}>
-          {paras.map((p, i) => (
+          {u.corps.split('\n\n').map((p, i) => (
             <p key={i} style={{ marginBottom: 18 }}>{p}</p>
           ))}
         </div>
 
         <div style={{ marginTop: 32, paddingTop: 18, borderTop: `1px solid ${C.rule}`, fontSize: 12, color: C.muted }}>
-          Rédaction {media} · {u.date || 'mai 2025'}
+          Émilie Vasseur · Les Échos · {u.date}
         </div>
 
         {/* Articles liés */}
         <div style={{ marginTop: 28, padding: '18px 0', borderTop: `2px solid ${C.dark}` }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>SUR LE MÊME SUJET</div>
-          {['Wellness : la fin de l\'injonction au calme ?',
-            'Ces marques qui font de la donnée un spectacle',
-            'Lumio Zen Series : la medtech qui ne veut pas vous endormir'].map((t, i) => (
+          {['Biostream : après la MDR, le B2B institutionnel s\'ouvre',
+            'Wearables en entreprise : ce que les DRH exigent désormais',
+            'Northgate Capital : la healthtech B2C, un pari risqué en 2026 ?'].map((t, i) => (
             <div key={i} style={{ padding: '8px 0', borderBottom: `1px solid ${C.rule}`, fontSize: 14, color: C.accent, cursor: 'pointer' }}>· {t}</div>
           ))}
         </div>

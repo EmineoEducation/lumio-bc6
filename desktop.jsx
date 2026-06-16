@@ -18,7 +18,8 @@ const APP_META = {
   finder:   { title: 'Finder',       w:  820, h: 540, icon: 'FinderIcon' },
   calendar: { title: 'Calendrier',   w:  780, h: 580, icon: 'CalendarIcon' },
   trash:    { title: 'Corbeille',    w:  500, h: 360, icon: 'TrashIcon' },
-  livrable:  { title: 'Livrable — ' + (window.PAC_CONFIG ? window.PAC_CONFIG.bloc : ''),        w: 920, h: 620, icon: 'LivrableIcon' }
+  livrable:  { title: 'Livrable — ' + (window.PAC_CONFIG ? window.PAC_CONFIG.bloc : ''),        w: 920, h: 620, icon: 'LivrableIcon' },
+  jefferson: { title: 'Jefferson · Guide PAC', w: 480, h: 560, icon: 'JeffersonIcon' }
 };
 
 // ═════ Window component ═════════════════════════════════════
@@ -124,33 +125,30 @@ const trafficLight = (color) => ({
 });
 
 // ═════ Menu bar ═════════════════════════════════════════════
-// Temps fictif BC6 : 3h30 réelles = 18 jours fictifs (25 avr → 13 mai)
-// Ratio : ~74x. Départ : ven. 25 avril 2025 08h31 · échéance CODIR mar. 13 mai
-const FICTIF_START_MIN = 8 * 60 + 31; // 08h31 le 25 avril
+// Temps fictif BC2 : 3h30 réelles = 18 jours fictifs (12→30 oct.)
+// Ratio : 1 min réelle = 5.14 min fictives. Départ : lun. 12 oct. 07h19
+const FICTIF_START_MIN = 7 * 60 + 19; // 07h19 en minutes depuis minuit le 12 oct.
 const RATIO = 18 * 24 * 60 / (3 * 60 + 30); // ~74x (18 jours / 3h30)
 const OCT_DAYS = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
-// avril a 30 jours ; 25 avr 2025 = vendredi → offset 5
+// 12 oct. 2026 = lundi → offset 1
 function getFictifTime() {
   const startReal = window.LUMIO_TIMER_START || Date.now();
   const realElapsed = (Date.now() - startReal) / 60000;
   const fictifElapsed = realElapsed * RATIO;
   const totalMin = FICTIF_START_MIN + fictifElapsed;
   const dayOffset = Math.floor(totalMin / (24 * 60));
-  // jour calendaire : 25..30 avril puis 1..13 mai
-  const absDay = 25 + dayOffset;
-  const inMay = absDay > 30;
-  const day = Math.min(inMay ? absDay - 30 : absDay, inMay ? 13 : 30);
-  const mois = inMay ? 'mai' : 'avr.';
+  const day = Math.min(12 + dayOffset, 30); // cap au 30 oct.
   const minuteOfDay = totalMin % (24 * 60);
   const hh = Math.floor(minuteOfDay / 60).toString().padStart(2,'0');
   const mm = Math.floor(minuteOfDay % 60).toString().padStart(2,'0');
-  const dowOffset = (5 + dayOffset) % 7; // vendredi 25 avr = offset 5
+  const dowOffset = (1 + dayOffset) % 7; // lundi 12 oct = offset 1
   const dow = OCT_DAYS[dowOffset];
-  // 'day' exposé pour le calendrier = jour de mai (13 = échéance) ; en avril on renvoie 0
-  return { label: `${dow} ${day} ${mois}  ${hh}:${mm}`, day: inMay ? day : 0, dayOffset };
+  return { label: `${dow} ${day} oct.  ${hh}:${mm}`, day, dayOffset };
 }
 
-// Échéance fictive : CODIR élargi mardi 13 mai 2025 (fin de session)
+// Dates fictives : board vendredi 16 oct. 2026
+// Surveillance fin de session → J=30 (30 oct.) = deadline dépassée
+// Exposer pour le Calendrier
 window.__getFictifTime = getFictifTime;
 
 function MenuBar({ activeApp, openLogout }) {
@@ -234,6 +232,7 @@ function Dock({ openApp, openWindows, livrableUnlocked }) {
     { id: 'notepad', label: 'Bloc-notes' },
     { id: 'slack', label: 'Slack' },
     { id: 'calendar', label: 'Calendrier' },
+    { id: 'jefferson', label: 'Jefferson' },
     { id: 'trash', label: 'Corbeille' }
   ];
   const items = livrableUnlocked
@@ -552,21 +551,21 @@ function Desktop({ onLogout }) {
               fromEmail: 'camille.ott@lumio-health.com',
               avatar: 'CO', avatarColor: '#0a7a6e',
               subject: 'Ce que je ne mets pas sur Slack',
-              date: '12/05/25 · 09:14',
-              preview: 'La vraie tension n\'est pas créative. Elle est politique…',
+              date: '12/10/26 · 09:14',
+              preview: 'Le vrai churn c\'est 9 %, pas 4. Et j\'ai des comptes en attente de la MDR…',
               unread: true,
               tags: ['TERRAIN'],
               body: `${(window.LUMIO_DATA?.student?.name || '').split(' ')[0] || 'Bonjour'},
 
-Je préfère t'écrire par mail. Sonia lit les canaux Slack.
+Je préfère t'écrire par mail. Théo lit les canaux Slack.
 
-Deux choses que tu dois savoir avant de finaliser ta créa.
+Deux choses que tu dois savoir pour ton document.
 
-Première chose : sur le papier, tout le monde veut "de l'audace". Mais le jour où une campagne grand public un peu décalée sortira, j'aurai trois DRH au téléphone qui me diront "ce n'est plus le sérieux pour lequel on vous a référencés". Ça m'est déjà arrivé avec un teaser. La tension n'est pas créative, elle est politique : Sonia est jugée sur le buzz, moi sur le renouvellement des contrats. Ton axe doit pouvoir me protéger des deux côtés.
+Première chose : le churn qu'on présente au board est de 4,1 %. C'est le churn sur les contrats signés depuis janvier 2025, c'est-à-dire les meilleurs clients. Si tu calcules sur la base totale des 180 clients actifs, tu es plus près de 9 %. C'est le chiffre que j'utilise dans mes prévisions terrain. Sonia ne veut pas l'entendre.
 
-Deuxième chose : notre meilleur argument grand public, on l'a déjà et on l'oublie. Quand un client B2B teste le bracelet, ce qui le convainc, ce n'est pas le discours — c'est de voir SA propre courbe de stress chuter après une pause. La preuve vécue, pas la promesse. Si ta création fait vivre ça au grand public, tu tiens quelque chose que Calm ne pourra jamais copier.
+Deuxième chose : j'ai au moins 8 à 10 comptes B2B en stand-by sur la MDR pour monter en gamme. Un seul m'a dit mot pour mot : "Le jour où Lumio a sa MDR, on double le périmètre." Ça représente 600K€ de CA additionnel sur 12 mois sans aller chercher un seul nouveau client. Est-ce que quelqu'un a mis ça dans une projection ? Non.
 
-Le comité va entendre "il faut oser". La vraie question, celle que personne ne pose : oser quoi, sans perdre ce qui nous rend crédibles ?
+Le board va entendre deux positions : Sonia qui veut aller vite, Théo qui veut attendre. La vraie question, celle que personne ne pose, c'est : qu'est-ce qu'on perd en B2B si on annonce le pivot maintenant, avant la MDR ?
 
 À toi de décider comment tu l'intègres.
 
@@ -620,7 +619,7 @@ Camille`
     const check = setInterval(() => {
       if (!window.__getFictifTime) return;
       const { day } = window.__getFictifTime();
-      if (day >= 13 && !window.__codirNotified) {
+      if (day >= 30 && !window.__codirNotified) {
         window.__codirNotified = true;
         const id = ++notifSeqRef.current;
         setNotifications(ns => [...ns, {
@@ -628,8 +627,8 @@ Camille`
           app: 'Calendrier',
           icon: '📅',
           color: '#c4420f',
-          title: 'CODIR élargi dans 5 minutes',
-          body: 'Northgate arrive. Dernière chance de remettre ta stratégie créative. Il est 17h55 le 13 mai.',
+          title: 'Board Northgate dans 5 minutes',
+          body: 'Jakob arrive. Dernière chance d\'envoyer la recommandation. Il est 08h55 le 30 octobre.',
           click: { app: 'livrable', props: {} }
         }]);
       }
@@ -713,21 +712,21 @@ Camille`
       if (dLeft <= 12 && dLeft > 7) {
         pushTip('j12', {
           title: 'J−12 · Par où commencer',
-          body: 'Sonia t\'a écrit ce matin. Commence par Mail — le brief PULSE est là.',
+          body: 'Théo t\'a écrit ce matin à 07h19. Commence par Mail — sa lettre de mission est là.',
           click: { app: 'mail', props: { openId: 'brief' } }
         });
       }
       if (dLeft <= 7 && dLeft > 3) {
         pushTip('j7', {
           title: 'J−7 · Passer à l\'action',
-          body: 'Sonia attend un parti-pris créatif, pas un résumé. Ouvre Slack et envoie-lui ton premier territoire — même imparfait.',
+          body: 'Jakob attend une position, pas un diagnostic. Ouvre Slack et envoie-lui ta première hypothèse — même imparfaite.',
           click: { app: 'slack', props: {} }
         });
       }
       if (dLeft <= 3 && dLeft > 0) {
         pushTip('j3', {
           title: 'J−3 · Finaliser',
-          body: 'L\'app Livrable t\'attend dans le dock. C.20-III à C.22-III — tu as assez d\'éléments pour ta stratégie créative.',
+          body: 'L\'app Livrable t\'attend dans le dock. C.7 à C.12 — tu as assez d\'éléments pour la recommandation board.',
           click: { app: 'livrable', props: {} }
         });
       }
@@ -745,22 +744,22 @@ Camille`
     const checks = [
       // 3 min sans rien ouvrir → Mail
       { delay: 3 * 60 * 1000, key: 'ctx_start', cond: () => openedApps.size === 0,
-        tip: { title: 'Par où commencer ?', body: 'Sonia t\'a écrit ce matin. Le brief PULSE est dans Mail — commence par là.', click: { app: 'mail', props: { openId: 'brief' } } } },
+        tip: { title: 'Par où commencer ?', body: 'Théo t\'a écrit ce matin à 07h19. Sa lettre de mission est dans Mail — commence par là.', click: { app: 'mail', props: { openId: 'brief' } } } },
       // 6 min — Mail ouvert mais pas Slack
       { delay: 6 * 60 * 1000, key: 'ctx_slack', cond: () => openedApps.has('mail') && !openedApps.has('slack'),
-        tip: { title: 'Jakob attend', body: 'Tu as lu le brief. Sonia attend ton premier angle créatif sur Slack — ouvre-le et envoie-lui quelque chose.', click: { app: 'slack', props: {} } } },
+        tip: { title: 'Jakob attend', body: 'Tu as lu le brief. Jakob Rein attend ta première hypothèse sur Slack — ouvre-le et envoie-lui quelque chose.', click: { app: 'slack', props: {} } } },
       // 8 min — Slack ouvert mais rien envoyé
       { delay: 8 * 60 * 1000, key: 'ctx_send', cond: () => openedApps.has('slack') && !slackMessageSent.v,
-        tip: { title: 'Envoie quelque chose', body: 'Slack est ouvert. Envoie une phrase à Sonia — même incomplète. Ça débloque la suite.', click: { app: 'slack', props: {} } } },
+        tip: { title: 'Envoie quelque chose', body: 'Slack est ouvert. Envoie une phrase à Jakob — même incomplète. Ça débloque la suite.', click: { app: 'slack', props: {} } } },
       // 10 min — pas ouvert PDF
       { delay: 10 * 60 * 1000, key: 'ctx_pdf', cond: () => !openedApps.has('pdf'),
-        tip: { title: 'Le cadrage créatif est dans Aperçu', body: 'Le deck PULSE et la veille créative de Yassine sont dans Aperçu. Lis-les pour ancrer tes axes.', click: { app: 'pdf', props: {} } } },
+        tip: { title: 'Le deck board Q3 est dans Aperçu', body: 'Sonia a préparé un deck board pour octobre. Il contient des chiffres clés — et des projections que tu dois analyser.', click: { app: 'pdf', props: {} } } },
       // 15 min — pas ouvert Mémos vocaux
       { delay: 15 * 60 * 1000, key: 'ctx_voice', cond: () => !openedApps.has('voice'),
-        tip: { title: 'Camille a enregistré trois verbatims', body: 'Ouvre Mémos vocaux — Camille Ott pose des garde-fous B2B que les documents ne montrent pas.', click: { app: 'voice', props: {} } } },
+        tip: { title: 'Camille a enregistré trois verbatims', body: 'Ouvre Mémos vocaux — Camille Ott dit des choses sur les clients B2B que les documents ne montrent pas.', click: { app: 'voice', props: {} } } },
       // 20 min — livrable débloqué mais pas ouvert
       { delay: 20 * 60 * 1000, key: 'ctx_livrable', cond: () => livrableUnlocked && !openedApps.has('livrable'),
-        tip: { title: 'Le livrable t\'attend', body: 'L\'app Livrable rebondit dans le dock. C.20-III à C.22-III — commence à construire ta stratégie créative.', click: { app: 'livrable', props: {} } } },
+        tip: { title: 'Le livrable t\'attend', body: 'L\'app Livrable rebondit dans le dock. C.7 à C.12 — commence à construire la recommandation.', click: { app: 'livrable', props: {} } } },
     ];
 
     const timers = checks.map(c =>
@@ -772,10 +771,10 @@ Camille`
   // Notification scheduler ambiant (existant, allégé)
   useWmEffect(() => {
     const events = [
-      { t: 12000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'Avant de te lancer dans la créa — un point sur ce que le B2B peut et ne peut pas accepter. Dis-moi 🙃', click: { app: 'slack', props: { openChannel: 'camille' } } } },
-      { t: 60000, n: { app: 'Calendrier', icon: '📅', color: '#134547', title: 'CODIR élargi · Northgate', body: 'Mardi 13 mai à 18:00 — remise de la stratégie créative PULSE.', click: { app: 'calendar' } } },
-      { t: 130000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'PS — j\'ai laissé un mémo vocal sur les garde-fous B2B. Audio dispo dans Mémos vocaux.', click: { app: 'voice' } } },
-      { t: 20 * 60 * 1000, n: { app: 'Society', icon: 'S', color: '#e2001a', title: 'À lire · Society', body: 'La presse valide le territoire : sortir du calme, miser sur la lucidité et la donnée.', click: { app: 'browser', props: { openTab: 'fausse-une' } } } }
+      { t: 12000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'Si tu veux les vrais chiffres terrain avant de commencer — pas ceux du deck — dis-moi 🙃', click: { app: 'slack', props: { openChannel: 'camille' } } } },
+      { t: 60000, n: { app: 'Calendrier', icon: '📅', color: '#1b3a6b', title: 'Board Northgate Capital', body: 'Vendredi 16 oct. à 09:00 — dans 4 jours. Recommandation attendue jeudi soir.', click: { app: 'calendar' } } },
+      { t: 130000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'PS — j\'ai des verbatims clients qui peuvent nourrir ta reco. Audio dispo dans Mémos vocaux.', click: { app: 'voice' } } },
+      { t: 20 * 60 * 1000, n: { app: 'Les Échos', icon: 'LE', color: '#1a1a2e', title: 'Breaking · Wearables & Mutuelles', body: 'Signal fort B2B : appel d\'offres mutuelles 45 M€ avec MDR obligatoire.', click: { app: 'browser', props: { openTab: 'fausse-une' } } } }
     ];
     const timers = events.map(ev => setTimeout(() => {
       const id = ++notifSeqRef.current;
@@ -831,7 +830,6 @@ Camille`
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(26,102,65,0.85)'; e.currentTarget.style.color = 'white'; }}
           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(245,243,239,0.55)'; e.currentTarget.style.color = 'var(--ink-soft)'; }}
         >?</button>
-        {window.JeffersonApp && React.createElement(window.JeffersonApp)}
       </div>
     </WindowsCtx.Provider>
   );

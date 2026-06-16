@@ -6,31 +6,31 @@ const { useState: useStateMail, useEffect: useEffectMail, useRef: useRefMail } =
 function MailApp({ winId, openId }) {
   const D = window.LUMIO_DATA;
 
-  // Build mailbox BC6 (PULSE)
+  // Build mailbox BC2
   const inbox = [
     {
       id: 'brief',
-      from: D.briefEmail.from || 'Sonia Ferracci',
-      fromEmail: D.briefEmail.fromEmail || 'sonia@lumio-health.com',
-      avatar: 'SF',
-      avatarColor: '#c4420f',
-      subject: D.briefEmail.subject || 'Opération PULSE — Lancement Lumio Zen Series',
-      date: '13/05/25 · 08:30',
-      preview: 'Lumio franchit un cap : on lance la Zen Series au grand public. Tu pilotes la stratégie créative…',
+      from: 'Théo Marczak',
+      fromEmail: 'theo@lumio-health.com',
+      avatar: 'TM',
+      avatarColor: '#5c2d8f',
+      subject: 'Mission urgente — Board Northgate vendredi',
+      date: '12/10/26 · 07:19',
+      preview: 'Lou, Je vais être direct parce qu\'on n\'a pas le temps. Le board Northgate…',
       unread: false,
       flagged: true,
       body: D.briefEmail.body,
-      tags: ['MISSION', 'PULSE']
+      tags: ['URGENT', 'MISSION']
     },
     {
       id: 'jakob',
-      from: D.jakobEmail.from || 'Sonia Ferracci',
-      fromEmail: 'sonia@lumio-health.com',
-      avatar: 'SF',
-      avatarColor: '#c4420f',
-      subject: D.jakobEmail.subject || 'CONFIDENTIEL — La barre fixée par Northgate',
-      date: '12/05/25 · 21:10',
-      preview: 'Je te transfère en confidentiel la note de Jakob. Lis-la avant de produire quoi que ce soit…',
+      from: 'Jakob Rein',
+      fromEmail: 'j.rein@northgate-capital.com',
+      avatar: 'JR',
+      avatarColor: '#1b3a6b',
+      subject: 'Board Friday — what I expect',
+      date: '09/10/26 · 16:44',
+      preview: 'Short version : I need one scenario. Not three. One…',
       unread: false,
       forwarded: true,
       body: D.jakobEmail.body,
@@ -48,7 +48,7 @@ function MailApp({ winId, openId }) {
       id: 'd1', from: 'LinkedIn', fromEmail: 'no-reply@linkedin.com',
       avatar: 'in', avatarColor: '#0a66c2',
       subject: 'Vous avez 4 nouvelles offres correspondant à votre profil',
-      date: '05/05/25 · 18:30',
+      date: '02/10/26 · 18:30',
       preview: 'Senior Brand Strategist · Healthtech — Paris · BNP Paribas Cardif…',
       unread: true, distractor: true,
       body: 'Vous avez 4 nouvelles offres correspondant à votre profil.\n\n→ Senior Brand Strategist · Healthtech — Paris · BNP Paribas Cardif\n→ Directeur de Marque — Doctolib\n→ Head of Brand — Withings\n→ Consultant Senior — Frog Design\n\nVoir toutes les offres →'
@@ -57,7 +57,7 @@ function MailApp({ winId, openId }) {
       id: 'd2', from: 'Le Slip Français', fromEmail: 'newsletter@leslipfrancais.fr',
       avatar: '🩳', avatarColor: '#1a4d7a',
       subject: '–30% sur la collection Automne 🍂',
-      date: '05/05/25 · 09:15',
+      date: '02/10/26 · 09:15',
       preview: 'Le retour du froid, c\'est aussi le retour de nos bestsellers…',
       unread: true, distractor: true,
       body: '—30% sur la collection Automne. Code : AUTOMNE26.'
@@ -66,10 +66,10 @@ function MailApp({ winId, openId }) {
       id: 'd3', from: 'URSSAF', fromEmail: 'no-reply@urssaf.fr',
       avatar: 'U', avatarColor: '#003671',
       subject: 'Échéance trimestrielle — déclaration à venir',
-      date: '02/05/25 · 06:00',
-      preview: 'Madame, Monsieur, Votre déclaration trimestrielle doit être effectuée avant le 30/04/2025…',
+      date: '01/10/26 · 06:00',
+      preview: 'Madame, Monsieur, Votre déclaration trimestrielle doit être effectuée avant le 30/09/2026…',
       unread: false, distractor: true,
-      body: 'Madame, Monsieur,\n\nVotre déclaration trimestrielle doit être effectuée avant le 30 avril 2025.\n\nCordialement, vos services URSSAF.'
+      body: 'Madame, Monsieur,\n\nVotre déclaration trimestrielle doit être effectuée avant le 30 septembre 2026.\n\nCordialement, vos services URSSAF.'
     }
   ];
 
