@@ -18,7 +18,7 @@ const APP_META = {
   finder:   { title: 'Finder',       w:  820, h: 540, icon: 'FinderIcon' },
   calendar: { title: 'Calendrier',   w:  780, h: 580, icon: 'CalendarIcon' },
   trash:    { title: 'Corbeille',    w:  500, h: 360, icon: 'TrashIcon' },
-  livrable:  { title: 'Livrable — BC3',        w: 920, h: 620, icon: 'LivrableIcon' },
+  livrable:  { title: 'Livrable — ' + (window.PAC_CONFIG ? window.PAC_CONFIG.bloc : ''),        w: 920, h: 620, icon: 'LivrableIcon' },
   jefferson: { title: 'Jefferson · Guide PAC', w: 480, h: 560, icon: 'JeffersonIcon' }
 };
 
@@ -125,29 +125,29 @@ const trafficLight = (color) => ({
 });
 
 // ═════ Menu bar ═════════════════════════════════════════════
-// Temps fictif BC3 : 3h30 réelles = 18 jours fictifs (19→27 jan.)
-// Ratio : 1 min réelle = 5.14 min fictives. Départ : mar. 19 jan. 07h19
-const FICTIF_START_MIN = 7 * 60 + 19; // 07h19 en minutes depuis minuit le 19 jan.
+// Temps fictif BC2 : 3h30 réelles = 18 jours fictifs (12→30 oct.)
+// Ratio : 1 min réelle = 5.14 min fictives. Départ : lun. 12 oct. 07h19
+const FICTIF_START_MIN = 7 * 60 + 19; // 07h19 en minutes depuis minuit le 12 oct.
 const RATIO = 18 * 24 * 60 / (3 * 60 + 30); // ~74x (18 jours / 3h30)
-const JAN_DAYS = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
-// 19 jan. 2027 = mardi → offset 2
+const OCT_DAYS = ['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
+// 12 oct. 2026 = lundi → offset 1
 function getFictifTime() {
   const startReal = window.LUMIO_TIMER_START || Date.now();
   const realElapsed = (Date.now() - startReal) / 60000;
   const fictifElapsed = realElapsed * RATIO;
   const totalMin = FICTIF_START_MIN + fictifElapsed;
   const dayOffset = Math.floor(totalMin / (24 * 60));
-  const day = Math.min(19 + dayOffset, 27); // cap au 27 jan.
+  const day = Math.min(12 + dayOffset, 30); // cap au 30 oct.
   const minuteOfDay = totalMin % (24 * 60);
   const hh = Math.floor(minuteOfDay / 60).toString().padStart(2,'0');
   const mm = Math.floor(minuteOfDay % 60).toString().padStart(2,'0');
-  const dowOffset = (2 + dayOffset) % 7; // mardi 19 jan = offset 2
-  const dow = JAN_DAYS[dowOffset];
-  return { label: `${dow} ${day} jan.  ${hh}:${mm}`, day, dayOffset };
+  const dowOffset = (1 + dayOffset) % 7; // lundi 12 oct = offset 1
+  const dow = OCT_DAYS[dowOffset];
+  return { label: `${dow} ${day} oct.  ${hh}:${mm}`, day, dayOffset };
 }
 
-// Dates fictives : board lundi 27 jan. 2027
-// Surveillance fin de session → J=27 (27 jan.) = board
+// Dates fictives : board vendredi 16 oct. 2026
+// Surveillance fin de session → J=30 (30 oct.) = deadline dépassée
 // Exposer pour le Calendrier
 window.__getFictifTime = getFictifTime;
 
@@ -513,17 +513,12 @@ function PacTimeline() {
 }
 
 
-function Desktop({ onLogout, timerStart }) {
-  // Reprise après reload : réassigne le timer fictif si la session le fournit
-  if (timerStart && !window.LUMIO_TIMER_START) window.LUMIO_TIMER_START = timerStart;
+function Desktop({ onLogout }) {
   const [windows, setWindows] = useWmState([]);
   const [zCounter, setZCounter] = useWmState(100);
   const [notifications, setNotifications] = useWmState([]);
   const [exchangeCount, setExchangeCount] = useWmState(0);
-  // livrable_immediate = true dans PAC_CONFIG → livrable visible dès l'entrée (BC3, BC5, BC6)
-  const [livrableUnlocked, setLivrableUnlocked] = useWmState(
-    !!(window.PAC_CONFIG && window.PAC_CONFIG.livrable_immediate)
-  );
+  const [livrableUnlocked, setLivrableUnlocked] = useWmState(false);
   const notifSeqRef = useWmRef(0);
 
   // Expose pour que SlackApp puisse incrémenter
@@ -604,10 +599,10 @@ Camille`
       setNotifications(ns => [...ns, {
         id,
         app: 'Slack',
-        icon: 'SF',
-        color: '#c4420f',
-        title: 'Sonia Ferracci',
-        body: 'Bien reçu. Je lis ça avant le board.',
+        icon: 'JR',
+        color: '#1b3a6b',
+        title: 'Jakob Rein',
+        body: 'I received your document. Reading now.',
         click: { app: 'slack', props: {} }
       }]);
       setTimeout(() => setNotifications(ns => ns.filter(n => n.id !== id)), 14000);
@@ -623,7 +618,7 @@ Camille`
     const check = setInterval(() => {
       if (!window.__getFictifTime) return;
       const { day } = window.__getFictifTime();
-      if (day >= 27 && !window.__codirNotified) {
+      if (day >= 30 && !window.__codirNotified) {
         window.__codirNotified = true;
         const id = ++notifSeqRef.current;
         setNotifications(ns => [...ns, {
@@ -631,8 +626,8 @@ Camille`
           app: 'Calendrier',
           icon: '📅',
           color: '#c4420f',
-          title: 'Board Lumio dans 5 minutes',
-          body: 'Théo présente dans 5 minutes. Dernière chance de soumettre le rapport. Il est 08h55 le 27 janvier.',
+          title: 'Board Northgate dans 5 minutes',
+          body: 'Jakob arrive. Dernière chance d\'envoyer la recommandation. Il est 08h55 le 30 octobre.',
           click: { app: 'livrable', props: {} }
         }]);
       }
@@ -716,21 +711,21 @@ Camille`
       if (dLeft <= 12 && dLeft > 7) {
         pushTip('j12', {
           title: 'J−12 · Par où commencer',
-          body: 'Sonia t\'a écrit ce matin à 07h15. Commence par Mail — sa lettre de mission est là. Théo a aussi écrit hier soir.',
+          body: 'Théo t\'a écrit ce matin à 07h19. Commence par Mail — sa lettre de mission est là.',
           click: { app: 'mail', props: { openId: 'brief' } }
         });
       }
       if (dLeft <= 7 && dLeft > 3) {
         pushTip('j7', {
           title: 'J−7 · Passer à l\'action',
-          body: 'Sonia attend ta première lecture sur Slack. Dis-lui ce que tu vois — les 4 problèmes. Sa réaction débloque la suite.',
+          body: 'Jakob attend une position, pas un diagnostic. Ouvre Slack et envoie-lui ta première hypothèse — même imparfaite.',
           click: { app: 'slack', props: {} }
         });
       }
       if (dLeft <= 3 && dLeft > 0) {
         pushTip('j3', {
           title: 'J−3 · Finaliser',
-          body: 'L\'app Livrable t\'attend dans le dock. Rapport d\'étape + Plan de reprise. Deadline vendredi 17h.',
+          body: 'L\'app Livrable t\'attend dans le dock. C.7 à C.12 — tu as assez d\'éléments pour la recommandation board.',
           click: { app: 'livrable', props: {} }
         });
       }
@@ -748,19 +743,19 @@ Camille`
     const checks = [
       // 3 min sans rien ouvrir → Mail
       { delay: 3 * 60 * 1000, key: 'ctx_start', cond: () => openedApps.size === 0,
-        tip: { title: 'Par où commencer ?', body: 'Sonia t\'a écrit ce matin à 07h15. Sa lettre de mission est dans Mail — commence par là.', click: { app: 'mail', props: { openId: 'brief' } } } },
+        tip: { title: 'Par où commencer ?', body: 'Théo t\'a écrit ce matin à 07h19. Sa lettre de mission est dans Mail — commence par là.', click: { app: 'mail', props: { openId: 'brief' } } } },
       // 6 min — Mail ouvert mais pas Slack
       { delay: 6 * 60 * 1000, key: 'ctx_slack', cond: () => openedApps.has('mail') && !openedApps.has('slack'),
-        tip: { title: 'Sonia attend', body: 'Tu as lu le brief. Sonia attend ta première lecture sur Slack — écris-lui ce que tu vois.', click: { app: 'slack', props: {} } } },
+        tip: { title: 'Jakob attend', body: 'Tu as lu le brief. Jakob Rein attend ta première hypothèse sur Slack — ouvre-le et envoie-lui quelque chose.', click: { app: 'slack', props: {} } } },
       // 8 min — Slack ouvert mais rien envoyé
       { delay: 8 * 60 * 1000, key: 'ctx_send', cond: () => openedApps.has('slack') && !slackMessageSent.v,
-        tip: { title: 'Envoie quelque chose', body: 'Slack est ouvert. Envoie une phrase à Sonia — même imparfaite. Commence par les 4 problèmes que tu as repérés.', click: { app: 'slack', props: {} } } },
+        tip: { title: 'Envoie quelque chose', body: 'Slack est ouvert. Envoie une phrase à Jakob — même incomplète. Ça débloque la suite.', click: { app: 'slack', props: {} } } },
       // 10 min — pas ouvert PDF
       { delay: 10 * 60 * 1000, key: 'ctx_pdf', cond: () => !openedApps.has('pdf'),
-        tip: { title: 'Le brief Alter Scope est dans Aperçu', body: 'Alter Scope avait noté des risques par écrit — page 4 du brief. À lire avant de conclure sur les responsabilités.', click: { app: 'pdf', props: {} } } },
+        tip: { title: 'Le deck board Q3 est dans Aperçu', body: 'Sonia a préparé un deck board pour octobre. Il contient des chiffres clés — et des projections que tu dois analyser.', click: { app: 'pdf', props: {} } } },
       // 15 min — pas ouvert Mémos vocaux
       { delay: 15 * 60 * 1000, key: 'ctx_voice', cond: () => !openedApps.has('voice'),
-        tip: { title: 'Camille a enregistré trois verbatims', body: 'Ouvre Mémos vocaux — Camille Ott pose la vraie question : "Mon rapport protège qui ?"', click: { app: 'voice', props: {} } } },
+        tip: { title: 'Camille a enregistré trois verbatims', body: 'Ouvre Mémos vocaux — Camille Ott dit des choses sur les clients B2B que les documents ne montrent pas.', click: { app: 'voice', props: {} } } },
       // 20 min — livrable débloqué mais pas ouvert
       { delay: 20 * 60 * 1000, key: 'ctx_livrable', cond: () => livrableUnlocked && !openedApps.has('livrable'),
         tip: { title: 'Le livrable t\'attend', body: 'L\'app Livrable rebondit dans le dock. C.7 à C.12 — commence à construire la recommandation.', click: { app: 'livrable', props: {} } } },
@@ -775,10 +770,10 @@ Camille`
   // Notification scheduler ambiant (existant, allégé)
   useWmEffect(() => {
     const events = [
-      { t: 12000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'Je viens d\'être mise au courant pour le budget. Si tu as besoin de moi pour le rapport, je suis dispo cet après-midi 🙃', click: { app: 'slack', props: { openChannel: 'camille' } } } },
-      { t: 60000, n: { app: 'Calendrier', icon: '📅', color: '#c4420f', title: 'Board Lumio Health', body: 'Lundi 27 jan. à 09:00 — dans quelques jours. Rapport d\'étape attendu vendredi 17h.', click: { app: 'calendar' } } },
-      { t: 130000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'PS — j\'ai 3 mémos vocaux sur la situation. Écoute-les avant d\'écrire à Sonia.', click: { app: 'voice' } } },
-      { t: 20 * 60 * 1000, n: { app: 'Stratégies', icon: 'ST', color: '#1a1a2e', title: 'Signal RSE · Campagnes bien-être', body: 'Plusieurs annonceurs ont dû retirer des campagnes santé mentale après des accusations de stigmatisation.', click: { app: 'browser', props: { openTab: 'press-0' } } } }
+      { t: 12000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'Si tu veux les vrais chiffres terrain avant de commencer — pas ceux du deck — dis-moi 🙃', click: { app: 'slack', props: { openChannel: 'camille' } } } },
+      { t: 60000, n: { app: 'Calendrier', icon: '📅', color: '#1b3a6b', title: 'Board Northgate Capital', body: 'Vendredi 16 oct. à 09:00 — dans 4 jours. Recommandation attendue jeudi soir.', click: { app: 'calendar' } } },
+      { t: 130000, n: { app: 'Slack', icon: 'CO', color: '#0a7a6e', title: 'Camille Ott', body: 'PS — j\'ai des verbatims clients qui peuvent nourrir ta reco. Audio dispo dans Mémos vocaux.', click: { app: 'voice' } } },
+      { t: 20 * 60 * 1000, n: { app: 'Les Échos', icon: 'LE', color: '#1a1a2e', title: 'Breaking · Wearables & Mutuelles', body: 'Signal fort B2B : appel d\'offres mutuelles 45 M€ avec MDR obligatoire.', click: { app: 'browser', props: { openTab: 'fausse-une' } } } }
     ];
     const timers = events.map(ev => setTimeout(() => {
       const id = ++notifSeqRef.current;
@@ -815,36 +810,8 @@ Camille`
         <Dock openApp={openApp} openWindows={windows} livrableUnlocked={livrableUnlocked} />
         <PacTimeline />
         <NotificationStack notifications={notifications} onDismiss={dismissNotif} onClick={clickNotif} />
-        {/* Jefferson FAB — flottant bas-droite */}
-        {(() => {
-          const JeffFAB = window.LUMIO_APPS && window.LUMIO_APPS.jefferson_fab;
-          if (JeffFAB) return <JeffFAB openApp={openApp} />;
-          // Fallback : bouton simple si app-assistant ne fournit pas jefferson_fab
-          const JeffIcon = window.JeffersonIcon;
-          return (
-            <button
-              onClick={() => openApp('jefferson')}
-              title="Jefferson · Guide PAC"
-              style={{
-                position: 'fixed', bottom: 90, right: 16, zIndex: 9998,
-                width: 52, height: 52, borderRadius: '50%',
-                background: 'rgba(11,43,45,0.88)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '2px solid rgba(93,226,152,0.45)',
-                boxShadow: '0 4px 18px rgba(11,43,45,0.45)',
-                cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all .2s'
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 6px 24px rgba(93,226,152,0.35)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(11,43,45,0.45)'; }}
-            >
-              {JeffIcon ? <JeffIcon size={30} /> : <span style={{ fontSize: 22 }}>🐰</span>}
-            </button>
-          );
-        })()}
         {/* Bouton ? — aide à la demande */}
+        <JeffersonFab openApp={openApp} isOpen={windows.some(w => w.app === 'jefferson')} />
         <button
           onClick={() => openApp('finder', { openFolder: 'guide' })}
           title="Guide de mission"
@@ -865,6 +832,45 @@ Camille`
         >?</button>
       </div>
     </WindowsCtx.Provider>
+  );
+}
+
+
+// ═════ Jefferson FAB ═══════════════════════════════════════
+// Bouton flottant en bas à droite (hors dock). États visuels :
+// idle (gris), talking (animé quand la fenêtre Jefferson est ouverte).
+function JeffersonFab({ openApp, isOpen }) {
+  const Icon = window.JeffersonIcon;
+  const [hover, setHover] = useWmState(false);
+  useWmEffect(() => {
+    if (!document.getElementById('jefferson-fab-style')) {
+      const s = document.createElement('style'); s.id = 'jefferson-fab-style';
+      s.textContent = '@keyframes jefferson-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}.jefferson-talking{animation:jefferson-pulse 1.4s ease-in-out infinite}';
+      document.head.appendChild(s);
+    }
+  }, []);
+  return (
+    <button
+      onClick={() => openApp('jefferson')}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      title="Jefferson · Guide PAC"
+      className={isOpen ? 'jefferson-talking' : ''}
+      style={{
+        position: 'fixed', bottom: 22, right: 22, zIndex: 9998,
+        width: 60, height: 60, borderRadius: '50%',
+        background: 'rgba(245,243,239,0.78)',
+        backdropFilter: 'blur(20px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(20px) saturate(1.4)',
+        border: '1px solid rgba(255,255,255,0.5)',
+        boxShadow: hover ? '0 14px 36px rgba(20,24,36,0.28)' : '0 8px 22px rgba(20,24,36,0.18)',
+        cursor: 'pointer', padding: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'transform 220ms cubic-bezier(.34,1.56,.64,1), box-shadow 220ms ease',
+        transform: hover ? 'translateY(-3px) scale(1.04)' : 'none'
+      }}>
+      {Icon ? <Icon size={42} /> : <span style={{ fontSize: 24 }}>🐰</span>}
+    </button>
   );
 }
 

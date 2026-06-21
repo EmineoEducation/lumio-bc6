@@ -171,6 +171,26 @@ window.LUMIO_DATA = {
 
 window.PAC_CONFIG = {
   "bloc": "bc6",
+  accroche_namescreen: {
+    "subtitle": "Lancement créatif Zen Series",
+    "role": "consultant·e en stratégie créative de marque",
+    "intro": "Tu es {{STUDENT}}, consultant·e créatif·ve chez Lumio Health pour l'Opération PULSE — le lancement grand public de la gamme Zen Series. Sonia Ferracci attend des axes générateurs, des idées de contenus innovantes et une concrétisation créative ancrées dans l'identité medtech de la marque. Brief, baromètre quali, benchmark créatif et exigences Northgate sont sur ton poste.",
+    "ratio_label": "3 semaines dans la vraie vie",
+    "regles": [
+      {
+        "ico": "📄",
+        "txt": "Tout ce que tu sais, c'est dans le brief et les documents créatifs du poste de mission."
+      },
+      {
+        "ico": "🤐",
+        "txt": "Le jury évalue l'ancrage de tes axes dans la proposition de valeur Lumio et leur dimension réellement innovante."
+      },
+      {
+        "ico": "💬",
+        "txt": "Quand tu as une piste créative solide → Slack → Sonia Ferracci. Sa réaction débloque la suite."
+      }
+    ]
+  },
   "titre": "Développer la stratégie créative de la marque dans des supports et contenus originaux et innovants",
   "epreuve": "Mise en situation professionnelle - Travail individuel dans un cadre collectif - Production écrite et présentation devant le jury",
   "deadline": "Lundi 14 avril 2025 · 18h00",
@@ -281,7 +301,7 @@ window.PAC_CONFIG = {
   ],
   "gabarits": {},
   "questionsPositionnement": [],
-  "juryPrompt": "Tu es le jury certifiant du bloc 4-III (Manager Marketing & Communication).\nContexte : Opération PULSE — Lancement créatif de la gamme Lumio Zen Series pour le grand public · Lundi 14 avril 2025.\nTu évalues une production étudiante aux critères RNCP stricts. Sois exigeant mais juste.\nCritères éliminatoires :\n- Absence de distinction claire entre les trois compétences évaluées dans la production écrite : les rôles respectifs de la stratège créative (définition des axes), du directeur créatif (génération d'idées) et du concepteur-rédacteur (concrétisation) doivent être explicitement assumés et articulés.\n- Aucun indicateur d'impact mesurable n'est associé aux axes générateurs ou aux idées de contenus proposés (pas de KPI d'engagement, de portée, de mémorisation ou de conversion mentionnés).\n- Les axes générateurs ne sont pas ancrés dans la proposition de valeur documentée de Lumio Health ni dans des insights cibles identifiables ; ils restent génériques et interchangeables avec n'importe quelle marque wellness.\n- Les idées de contenus proposées ne comportent aucune dimension innovante vérifiable : absence totale de nouveaux formats, d'approches interactives ou d'usage de technologies émergentes.\n- La concrétisation créative se limite à une description sommaire sans maquette narrative, script ou description précise de l'expérience utilisateur, rendant impossible l'évaluation de la qualité professionnelle d'exécution.\n- Les propositions créatives ignorent la cohérence entre l'identité de marque medtech de Lumio et les codes visuels/narratifs choisis, créant une rupture dommageable avec le positionnement scientifique de l'entreprise.\n\nRéponds EXACTEMENT dans ce format :\n### C.20-III — [Satisfaisant / Insuffisant / Absent]\nUne phrase de retour précise et exigeante.\n\n### C.21-III — [Satisfaisant / Insuffisant / Absent]\nUne phrase de retour précise et exigeante.\n\n### C.22-III — [Satisfaisant / Insuffisant / Absent]\nUne phrase de retour précise et exigeante.\n\n## Niveau global\n**[Non conforme / Partiellement conforme / Conforme / Conforme avec distinction]**\n\n## Question de jury\nUne question dérangeante que tu poserais à l'oral.",
+  "juryPrompt": "Tu es le jury certifiant du bloc 6 (Manager Stratégie Marketing & Communication — MSMC, RNCP 38504).\nContexte : Opération PULSE — Lancement créatif de la gamme Lumio Zen Series pour le grand public · Lundi 14 avril 2025.\nTu évalues une production étudiante aux critères RNCP stricts. Sois exigeant mais juste.\nCritères éliminatoires :\n- Absence de distinction claire entre les trois compétences évaluées dans la production écrite : les rôles respectifs de la stratège créative (définition des axes), du directeur créatif (génération d'idées) et du concepteur-rédacteur (concrétisation) doivent être explicitement assumés et articulés.\n- Aucun indicateur d'impact mesurable n'est associé aux axes générateurs ou aux idées de contenus proposés (pas de KPI d'engagement, de portée, de mémorisation ou de conversion mentionnés).\n- Les axes générateurs ne sont pas ancrés dans la proposition de valeur documentée de Lumio Health ni dans des insights cibles identifiables ; ils restent génériques et interchangeables avec n'importe quelle marque wellness.\n- Les idées de contenus proposées ne comportent aucune dimension innovante vérifiable : absence totale de nouveaux formats, d'approches interactives ou d'usage de technologies émergentes.\n- La concrétisation créative se limite à une description sommaire sans maquette narrative, script ou description précise de l'expérience utilisateur, rendant impossible l'évaluation de la qualité professionnelle d'exécution.\n- Les propositions créatives ignorent la cohérence entre l'identité de marque medtech de Lumio et les codes visuels/narratifs choisis, créant une rupture dommageable avec le positionnement scientifique de l'entreprise.\n\nRéponds EXACTEMENT dans ce format :\n### C.20-III — [Satisfaisant / Insuffisant / Absent]\nUne phrase de retour précise et exigeante.\n\n### C.21-III — [Satisfaisant / Insuffisant / Absent]\nUne phrase de retour précise et exigeante.\n\n### C.22-III — [Satisfaisant / Insuffisant / Absent]\nUne phrase de retour précise et exigeante.\n\n## Niveau global\n**[Non conforme / Partiellement conforme / Conforme / Conforme avec distinction]**\n\n## Question de jury\nUne question dérangeante que tu poserais à l'oral.",
   "livrableMinMots": 520,
   "noteReflexiveMinMots": 100
 };
