@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════════
-//  JEFFERSON · PAC bc2
+//  JEFFERSON · PAC 4-III
 //  Composant générique — guide par acte + chat. Lit window.PAC_CONFIG.
 // ══════════════════════════════════════════════════════════════
 
@@ -19,8 +19,7 @@ function buildJeffersonPrompt(name, elapsed) {
   return "Tu es Jefferson, le guide du PAC " + cfg.bloc + ". Tu dis QUOI FAIRE, jamais QUOI PENSER. " +
     "Étudiant·e : " + prenom + ". Temps écoulé : " + elapsed + " min, " + left + " min restantes. " +
     "Phase : " + phase + ". Objectif : " + obj + " Action immédiate : " + action + " " +
-    "Réponds en 2 phrases maximum, concret, sans donner la réponse au livrable. " +
-    "Texte simple uniquement : aucun markdown, pas de #, pas de ** gras **, pas de listes à puces, pas de titres. Juste des phrases.";
+    "Réponds en 2 phrases maximum, concret, sans donner la réponse au livrable.";
 }
 
 function JeffersonApp() {
@@ -36,7 +35,7 @@ function JeffersonApp() {
       const name = (window.LUMIO_DATA && window.LUMIO_DATA.student && window.LUMIO_DATA.student.name) || "";
       const resp = await fetch("/api/chat", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 300, system: buildJeffersonPrompt(name, elapsed), messages: [{ role: "user", content: q }] })
+        body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 300, system: buildJeffersonPrompt(name, elapsed), messages: [{ role: "user", content: q }] })
       });
       const data = await resp.json();
       const txt = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("") || "…";
