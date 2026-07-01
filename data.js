@@ -167,6 +167,30 @@ window.LUMIO_DATA = {
       }
     ]
   }
+,
+  "finder": {
+    "folders": {
+      "guide": {
+        "title": "Guide de mission",
+        "sidebar": "⌘ Guide",
+        "icon": "📕",
+        "items": [
+          { "kind": "mail", "name": "Brief de mission", "app": "mail", "props": { "openId": "brief" } }
+        ]
+      },
+      "espace": {
+        "title": "Espace de travail",
+        "sidebar": "Espace de travail",
+        "icon": "📁",
+        "items": [
+          { "kind": "mail", "name": "Boîte mail", "app": "mail", "props": {} },
+          { "kind": "note", "name": "Notes", "app": "notes", "props": {} },
+          { "kind": "audio", "name": "Mémos vocaux", "app": "voice", "props": {} }
+        ]
+      }
+    },
+    "order": ["guide", "espace"]
+  }
 };
 
 window.PAC_CONFIG = {
