@@ -331,3 +331,719 @@ window.PAC_CONFIG = {
 };
 // Alias de compatibilité (les apps existantes lisent encore PASS_CONFIG)
 window.PASS_CONFIG = window.PAC_CONFIG;
+
+
+// === [Chantier PDF+Browser] dossiers/guide/portraits — 02/07/2026 ===
+// Restructuration de D.documents[]/D.deckBoard/D.yassineVeille (déjà écrits) en
+// D.dossiers[]/D.guide pour app-pdf.jsx. Ajout D.portraits[] (5 personnages
+// universels, fichiers déjà déployés dans /portraits/) + dossier Finder dédié.
+// Aucun contenu narratif nouveau : uniquement restructuration + câblage.
+(function() {
+  var D = window.LUMIO_DATA;
+  if (!D) return;
+  D.dossiers = [
+  {
+    "id": "DOC-01",
+    "title": "Brief Opération PULSE — Lancement Lumio Arc Grand Public",
+    "tab": "Brief Opération PULSE — Lance…",
+    "accent": "#1b3a6b",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Sonia Ferracci",
+        "title": "Brief Opération PULSE — Lancement Lumio Arc Grand Public",
+        "byline": "Brief créatif · Acte 1",
+        "blocks": [
+          {
+            "type": "h3",
+            "text": "BRIEF CRÉATIF — OPÉRATION PULSE"
+          },
+          {
+            "type": "p",
+            "text": "Version 2.1 — Diffusion restreinte\nDe : Sonia Ferracci, Directrice Marketing\nPour : Task force créative Lumio Arc Grand Public"
+          },
+          {
+            "type": "h3",
+            "text": "1. CONTEXTE"
+          },
+          {
+            "type": "p",
+            "text": "Lumio Health lance Lumio Arc en B2C le 2 juin 2027 (Journée mondiale de la santé mentale au travail). C'est notre premier lancement grand public. Lumio Arc est le seul wearable de mesure du stress certifié MDR de classe IIa disponible au grand public en France. C'est notre différenciateur absolu."
+          },
+          {
+            "type": "h3",
+            "text": "2. CIBLE"
+          },
+          {
+            "type": "p",
+            "text": "Primaire : actifs urbains 28–45 ans, CSP+, déjà sensibilisés au bien-être mais sceptiques vis-à-vis des promesses non prouvées. Ils veulent des preuves, pas des mantras.\nSecondaire : DRH et managers de PME qui utiliseraient Lumio Arc à titre personnel avant de le recommander à leur employeur."
+          },
+          {
+            "type": "h3",
+            "text": "3. PROMESSE DE MARQUE"
+          },
+          {
+            "type": "p",
+            "text": "\"Lumio Arc te dit ce que ton corps sait déjà. Et que tu refuses d'entendre.\"\nC'est une promesse de vérité, pas de confort."
+          },
+          {
+            "type": "h3",
+            "text": "4. CONTRAINTES IDENTITAIRES NON NÉGOCIABLES"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Ton rationnel — jamais anxiogène",
+              "Esthétique sobre — jamais lifestyle",
+              "Preuve clinique — toujours accessible, jamais jargonneuse",
+              "Compatibilité B2B — aucun code qui fragiliserait nos 180 comptes existants"
+            ]
+          },
+          {
+            "type": "h3",
+            "text": "5. CANAUX PRIORITAIRES"
+          },
+          {
+            "type": "p",
+            "text": "1. LinkedIn (cœur de cible professionnel) — formats : carrousels, témoignages, infographies data\n2. Instagram (désirabilité visuelle) — formats : Reels 15s, Stories interactives\n3. Site e-commerce (conversion) — landing page dédié, vidéo produit < 90s\n4. Presse spécialisée (crédibilité) — communiqué + dossier de presse avec études cliniques"
+          },
+          {
+            "type": "h3",
+            "text": "6. LIVRABLES ATTENDUS POUR LE 2 JUIN"
+          },
+          {
+            "type": "ul",
+            "items": [
+              "Note de copy stratégie (axes générateurs + messages clés par canal)",
+              "3 propositions d'axes créatifs argumentées avec exemples de formats",
+              "Brief de production pour l'équipe graphique",
+              "Grille de KPIs créatifs à 30/60/90 jours"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOC-02",
+    "title": "Résultats quali — Baromètre stress & bien-être connecté 2025 (panel 800 urbains CSP+)",
+    "tab": "Résultats quali — Baromètre s…",
+    "accent": "#c4420f",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Yassine Morel",
+        "title": "Résultats quali — Baromètre stress & bien-être connecté 2025 (panel 800 urbains CSP+)",
+        "byline": "Étude insights cible · Acte 1",
+        "blocks": [
+          {
+            "type": "h3",
+            "text": "BAROMÈTRE STRESS & BIEN-ÊTRE CONNECTÉ 2027"
+          },
+          {
+            "type": "p",
+            "text": "Panel quantitatif : 800 actifs urbains CSP+ 25–50 ans, France métropolitaine\nÉtude quali complémentaire : 24 entretiens individuels semi-directifs\nRéalisé par Yassine Morel (Content Manager) avec l'appui du cabinet Élaboré Research"
+          },
+          {
+            "type": "h3",
+            "text": "INSIGHT 1 : LE DÉNI PRODUCTIF"
+          },
+          {
+            "type": "p",
+            "text": "72 % des répondants déclarent se sentir \"sous pression régulièrement\" mais seulement 34 % utilisent le mot \"stress\" pour se décrire. Le stress est vécu comme un aveu de faiblesse, pas comme une donnée objective. Conséquence créative : ne jamais utiliser le mot \"stress\" en titre d'accroche. Préférer : \"charge\" \"pression\" \"seuil\"."
+          },
+          {
+            "type": "h3",
+            "text": "INSIGHT 2 : LA MÉFIANCE ENVERS LA TECHNOLOGIE INTRUSIVE"
+          },
+          {
+            "type": "p",
+            "text": "61 % se déclarent \"inquiets\" ou \"très inquiets\" par la collecte de données biométriques par une application. Mais ce chiffre tombe à 29 % quand la question précise \"données anonymisées, hébergées en France, aucun accès employeur\". La réassurance technique est un levier créatif puissant — à condition d'être formulée simplement."
+          },
+          {
+            "type": "h3",
+            "text": "INSIGHT 3 : LE BESOIN DE PREUVES ACCESSIBLES"
+          },
+          {
+            "type": "p",
+            "text": "83 % font davantage confiance à un témoignage d'utilisateur réel qu'à une étude clinique citée. Mais 91 % veulent que le produit \"soit sérieux scientifiquement\". La preuve doit être présente mais discrète — une caution, pas un argument."
+          },
+          {
+            "type": "h3",
+            "text": "INSIGHT 4 : LA RECHERCHE DE SENS, PAS DE PERFORMANCE"
+          },
+          {
+            "type": "p",
+            "text": "Quand on demande \"à quoi vous servirait de mieux gérer votre stress\", les trois premières réponses sont : être plus présent avec mes proches (67 %), retrouver du plaisir dans mon travail (58 %), dormir mieux (54 %). La performance n'apparaît qu'en 7e position. Le cadrage \"optimisation\" est un contre-sens pour cette cible."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOC-03",
+    "title": "Benchmark créatif secteur wellness & medtech — Territoires saturés et espaces libres",
+    "tab": "Benchmark créatif secteur wel…",
+    "accent": "#0a7a6e",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Yassine Morel",
+        "title": "Benchmark créatif secteur wellness & medtech — Territoires saturés et espaces libres",
+        "byline": "Analyse concurrentielle créative · Acte 2",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "BENCHMARK CRÉATIF — Wellness & Medtech Grand Public\nMars 2027 — Yassine Morel"
+          },
+          {
+            "type": "h3",
+            "text": "WITHINGS"
+          },
+          {
+            "type": "p",
+            "text": "Territoire : \"La santé est belle.\" Esthétique : épuré, blanc, famille heureuse. Ton : bienveillant, un peu clinique. Force : image premium reconnaissable. Faiblesse : aucune émotion forte, aucune prise de risque créative."
+          },
+          {
+            "type": "h3",
+            "text": "CALM / HEADSPACE"
+          },
+          {
+            "type": "p",
+            "text": "Territoire : \"Pause, respire, sois là.\" Esthétique : couleurs douces, illustrations rondes, typographie douce. Ton : chaleureux, non-prescriptif. Force : très accessible, déstigmatise le soin de soi. Faiblesse : aucune preuve scientifique, crédibilité médicale zéro."
+          },
+          {
+            "type": "h3",
+            "text": "OURA / WHOOP"
+          },
+          {
+            "type": "p",
+            "text": "Territoire : \"Connais tes données, maîtrise ta performance.\" Esthétique : sombre, sobre, luxe discret. Ton : expert, presque froid. Force : très crédible pour les connaisseurs. Faiblesse : élitiste, inaccessible pour le grand public non sportif."
+          },
+          {
+            "type": "h3",
+            "text": "FORMATS INNOVANTS PEU INVESTIS EN FRANCE"
+          },
+          {
+            "type": "p",
+            "text": "1. Séries de témoignages authentiques filmés avec données réelles visibles → Lumio Arc pourrait être la première marque medtech à montrer de vraies courbes physiologiques d'utilisateurs réels (avec accord) — \"Ma semaine en données\".\n2. LinkedIn long-form de Théo Marczak en tant qu'auteur — \"Ce que j'ai appris en 9 ans de mesure du stress\" — ton chercheur, pas CEO.\n3. Newsletter éditoriale hebdomadaire \"Charge utile\" : un angle science + un angle pratico-pratique. Différenciation radicale vs contenu wellness standard."
+          },
+          {
+            "type": "h3",
+            "text": "TERRITOIRE DISPONIBLE"
+          },
+          {
+            "type": "p",
+            "text": "Lumio Arc peut occuper : \"La vérité physiologique, formulée simplement.\" Personne dans le secteur francophone ne le fait. C'est un espace créatif libre, défendable, et cohérent avec notre ADN."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOC-04",
+    "title": "RE: PULSE — Exigences Northgate Capital sur le volet créatif",
+    "tab": "RE: PULSE — Exigences Northga…",
+    "accent": "#5c2d8f",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Théo Marczak",
+        "title": "RE: PULSE — Exigences Northgate Capital sur le volet créatif",
+        "byline": "Email interne · Acte 2",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "De : Théo Marczak\nÀ : Sonia Ferracci\nObjet : RE: PULSE — Exigences Northgate Capital sur le volet créatif"
+          },
+          {
+            "type": "p",
+            "text": "Sonia,"
+          },
+          {
+            "type": "p",
+            "text": "Jakob a transmis ses exigences par écrit ce matin. Je les relaie telles quelles — certaines sont légitimes, d'autres relèvent de sa logique d'investisseur plus que d'une compréhension fine de la création de marque. À toi de jouer."
+          },
+          {
+            "type": "p",
+            "text": "1. \"Chaque format créatif doit avoir un KPI d'engagement associé dès la phase de conception.\" → Je comprends l'intention mais attention à ne pas tuer la créativité en instrumentalisant chaque décision créative. À nous de proposer des indicateurs pertinents sans tomber dans la vanity metric."
+          },
+          {
+            "type": "p",
+            "text": "2. \"La crédibilité scientifique doit être visible dans au moins 50 % des supports de communication.\" → Interprétation : un logo certifié MDR, un chiffre d'étude ou un accréditation suffisent. Ne pas sur-jargonner."
+          },
+          {
+            "type": "p",
+            "text": "3. \"Aucun visuel ni message ne doit pouvoir être associé à un concurrent existant sur le segment.\" → C'est là où j'ai besoin que la task force soit vraiment rigoureuse. Les deux territoires recalés en pré-comité (minimaliste data-viz + empowerment émotionnel) sont tombés exactement là-dessus."
+          },
+          {
+            "type": "p",
+            "text": "4. \"Le dispositif doit être opérationnel sur 3 canaux minimum, avec une cohérence démontrable entre eux.\" → OK, c'est standard."
+          },
+          {
+            "type": "p",
+            "text": "Je compte sur toi pour que le livrable final réponde à ces 4 points sans en faire le cahier des charges unique. Le fond créatif passe avant la conformité investisseur."
+          },
+          {
+            "type": "p",
+            "text": "— Théo"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOC-05",
+    "title": "Retours réunion transversale B2B/B2C — Contraintes identitaires non négociables pour la Lumio Arc",
+    "tab": "Retours réunion transversale …",
+    "accent": "#7a3b46",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Camille Ott",
+        "title": "Retours réunion transversale B2B/B2C — Contraintes identitaires non négociables pour la Lumio Arc",
+        "byline": "Compte rendu de réunion · Acte 3",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "COMPTE RENDU — Réunion transversale B2B/B2C\nDate : 28 avril 2027 · Participants : Camille Ott, Sonia Ferracci, Théo Marczak (15 min)\nRédigé par : Camille Ott"
+          },
+          {
+            "type": "p",
+            "text": "Camille a listé les contraintes créatives non négociables issues des feedbacks de 7 comptes B2B stratégiques (Engie, AG2R, Allianz Care, CHU Bordeaux, Safran, Michelin, SNCF Voyageurs) — représentant 41 % du CA annuel."
+          },
+          {
+            "type": "h3",
+            "text": "CONTRAINTES FERMES"
+          },
+          {
+            "type": "p",
+            "text": "1. Pas de codes visuels associés à la maladie, à l'épuisement ou à la détresse (visages fermés, postures d'effondrement, vocabulaire de crise). Nos clients utilisent Lumio Pro dans une logique de prévention proactive — un lancement B2C sur le registre de la souffrance créerait une dissonance majeure avec leur propre communication interne."
+          },
+          {
+            "type": "p",
+            "text": "2. Pas de promesses de type \"guérison\" ou \"transformation radicale\" — terrain juridique instable sur les dispositifs médicaux, et incompatible avec notre discours d'entreprise auprès des mutuelles."
+          },
+          {
+            "type": "p",
+            "text": "3. La certification MDR doit être mentionnée ou visible dans tous les supports grand public — c'est notre garantie commune avec les comptes B2B que nous ne glissons pas vers le wellness non réglementé."
+          },
+          {
+            "type": "h3",
+            "text": "OBSERVATIONS DE CAMILLE"
+          },
+          {
+            "type": "p",
+            "text": "\"Je soutiens le lancement B2C. Mais je veux qu'un DRH de chez Engie qui voit une pub Lumio Arc dans le métro soit fier du produit qu'il a déployé chez ses salariés — pas gêné. C'est mon seul critère.\""
+          },
+          {
+            "type": "h3",
+            "text": "DÉCISION"
+          },
+          {
+            "type": "p",
+            "text": "Sonia et Camille conviennent que ces garde-fous s'appliquent à tous les formats sans exception, y compris les formats social media courts."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOC-06",
+    "title": "Premières directions artistiques explorées — Lumio Arc (version de travail)",
+    "tab": "Premières directions artistiq…",
+    "accent": "#1a6641",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Yassine Morel",
+        "title": "Premières directions artistiques explorées — Lumio Arc (version de travail)",
+        "byline": "Moodboard partiel · Acte 3",
+        "blocks": [
+          {
+            "type": "h3",
+            "text": "MOODBOARD CRÉATIF — Agence SHIFT Studio"
+          },
+          {
+            "type": "p",
+            "text": "Proposition intermédiaire v1.4 pour Lumio Arc Grand Public\nTransmis le 2 mai 2027 — Pour discussion, pas pour validation"
+          },
+          {
+            "type": "h3",
+            "text": "UNIVERS A : BIOMIMÉTISME"
+          },
+          {
+            "type": "p",
+            "text": "Inspiration : forêts de données, nervures de feuilles, réseaux neuronaux. Palette : vert foncé, noir, touches de blanc. Typographie : serif fin, presque scientifique. Sentiment transmis : sophistication, nature, intelligence organique.\nFeedback interne : Théo apprécie. Sonia trouve que \"ça fait trop premium de niche\". Camille n'a pas d'avis."
+          },
+          {
+            "type": "h3",
+            "text": "UNIVERS B : MINIMALISME DATA-VIZ"
+          },
+          {
+            "type": "p",
+            "text": "Inspiration : interfaces médicales, courbes épurées, espace blanc. Palette : blanc, gris clair, bleu marine. Typographie : sans-serif géométrique. Sentiment transmis : rigueur, clarté, confiance.\nFeedback interne : RECALÉ en pré-comité. \"Trop froid, pas d'émotion, ressemble à un logiciel RH.\""
+          },
+          {
+            "type": "h3",
+            "text": "UNIVERS C : RÉALISME ÉMOTIONNEL"
+          },
+          {
+            "type": "p",
+            "text": "Inspiration : photographie documentaire, vrais visages, lumière naturelle. Palette : tons chauds, naturels, pas de saturation. Typographie : humaniste, accessible. Sentiment transmis : authenticité, proximité, vérité.\nFeedback interne : RECALÉ en pré-comité. \"Trop Headspace, pas différenciant, on a déjà vu ça partout.\""
+          },
+          {
+            "type": "h3",
+            "text": "NOTE DE SHIFT"
+          },
+          {
+            "type": "p",
+            "text": "\"Les univers B et C ont été rejetés sur des critères de différenciation. Nous proposons une quatrième voie non encore explorée : le territoire de la 'précision douce' — rigueur scientifique exprimée avec une chaleur humaine inattendue. Nous attendons un brief plus précis sur le positionnement émotionnel souhaité avant de développer cette piste.\""
+          },
+          {
+            "type": "p",
+            "text": "Note Sonia en bas du document (manuscrite scannée) : \"C'est exactement ça que j'attends du consultant — m'aider à formuler ce que SHIFT n'arrive pas à trouver seul.\""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOC-07",
+    "title": "Questions préalables à la présentation du 14 avril — Northgate Capital",
+    "tab": "Questions préalables à la pré…",
+    "accent": "#2d6a4f",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Jakob Rein",
+        "title": "Questions préalables à la présentation du 14 avril — Northgate Capital",
+        "byline": "Email externe · Acte 4",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "De : Jakob Rein — Northgate Capital\nÀ : Théo Marczak, Sonia Ferracci\nObjet : Questions préparatoires au comité du 2 juin — Stratégie créative Lumio Arc"
+          },
+          {
+            "type": "p",
+            "text": "Théo, Sonia,"
+          },
+          {
+            "type": "p",
+            "text": "Avant le comité de validation du 2 juin, je souhaite avoir des réponses documentées aux cinq points suivants. Je ne les poserai pas à froid le jour J — j'attends que ces réponses soient intégrées dans la présentation finale."
+          },
+          {
+            "type": "h3",
+            "text": "1. DIFFÉRENCIATION PROUVÉE"
+          },
+          {
+            "type": "p",
+            "text": "Sur quels attributs créatifs précis Lumio Arc se distingue-t-il de Withings, Oura et Calm ? Je veux une matrice de positionnement, pas une réponse générique sur \"notre ADN scientifique\"."
+          },
+          {
+            "type": "h3",
+            "text": "2. INDICATEURS D'ENGAGEMENT ATTENDUS"
+          },
+          {
+            "type": "p",
+            "text": "Quels sont les KPIs créatifs retenus, par format et par canal ? Reach seul ne m'intéresse pas — je veux du taux d'engagement, du taux de conversion post-exposition, et une projection à 90 jours."
+          },
+          {
+            "type": "h3",
+            "text": "3. COHÉRENCE IDENTITAIRE"
+          },
+          {
+            "type": "p",
+            "text": "Comment garantissez-vous qu'une Story Instagram et un article LinkedIn transmettent le même positionnement de marque ? Je veux voir la preuve de la cohérence cross-canal dans les exemples produits."
+          },
+          {
+            "type": "h3",
+            "text": "4. INNOVATION FORMAT"
+          },
+          {
+            "type": "p",
+            "text": "Y a-t-il un format créatif dans le dispositif qui n'existe pas encore dans votre catégorie ? Si tout ce que vous proposez a déjà été fait, l'avantage compétitif est temporaire."
+          },
+          {
+            "type": "h3",
+            "text": "5. BUDGET ET ROI CRÉATIF"
+          },
+          {
+            "type": "p",
+            "text": "Quel est le budget de production créative alloué, et quel ROI en termes de notoriété et d'acquisition attendez-vous à 6 mois ? La créativité sans projection économique n'est pas une stratégie."
+          },
+          {
+            "type": "p",
+            "text": "Je reste disponible pour un échange avant le 2 juin si nécessaire."
+          },
+          {
+            "type": "p",
+            "text": "Jakob Rein\nPartner — Northgate Capital"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOC-08",
+    "title": "Dernier brief avant remise — Points de vigilance absolus",
+    "tab": "Dernier brief avant remise — …",
+    "accent": "#a0522d",
+    "warning": false,
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Sonia Ferracci",
+        "title": "Dernier brief avant remise — Points de vigilance absolus",
+        "byline": "Message Teams · Acte 5",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "De : Sonia Ferracci\nÀ : {{PRENOM}} {{NOM}}\nObjet : Pour demain — ce que j'ai besoin d'entendre"
+          },
+          {
+            "type": "p",
+            "text": "{{PRENOM}},"
+          },
+          {
+            "type": "p",
+            "text": "Le pré-comité de ce soir a recalé deux des axes qu'on avait mis en réserve. Premier recalé : \"La mesure qui libère\" — jugé \"trop générique, pas ancré dans le produit\". Deuxième recalé : \"Prends soin de toi autrement\" — jugé \"déjà vu chez Calm et Petit Bambou\"."
+          },
+          {
+            "type": "p",
+            "text": "Ça veut dire que demain, si tu proposes quelque chose qui ressemble à ce que font les concurrents, même de loin, ça ne passera pas. Jakob est dans la salle. Théo va sourire mais surveiller."
+          },
+          {
+            "type": "p",
+            "text": "Ce que j'ai besoin d'entendre demain :\n— Ce que Lumio Arc peut dire que personne d'autre ne peut dire (et la preuve que c'est vrai)\n— Comment cette vérité se traduit en axe créatif sur trois canaux avec une cohérence défendable\n— Une réponse aux 5 questions de Jakob, même synthétique"
+          },
+          {
+            "type": "p",
+            "text": "Je ne peux pas te donner plus de temps. Mais je te fais confiance."
+          },
+          {
+            "type": "p",
+            "text": "À demain 9h.\n— Sonia"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "deck-board",
+    "title": "Lumio Arc — Stratégie créative de lancement grand public · Comité du 2 juin 2027",
+    "tab": "Présentation CODIR",
+    "accent": "#1b3a6b",
+    "type": "deck",
+    "subtitle": "Présentation",
+    "slides": [
+      {
+        "titre": "Contexte stratégique",
+        "contenu": "Lumio Health franchit un cap : après 9 ans de B2B rigoureux, nous lançons Lumio Arc au grand public. Notre actif différenciant : la seule certification MDR de classe IIa sur ce segment en France. Notre risque principal : devenir une marque wellness comme les autres."
+      },
+      {
+        "titre": "Le brief créatif en une phrase",
+        "contenu": "\"Montrer que mesurer son stress, ce n'est pas l'obsession de soi — c'est la condition de la présence aux autres.\""
+      },
+      {
+        "titre": "Trois territoires présentés à SHIFT",
+        "contenu": "• Territoire A : \"La science de la sérénité\" — codes minimalistes, data-viz épurée, ton rationnel. Résultat pré-comité : recalé. Jugé trop froid pour le grand public.\n• Territoire B : \"Reprends le contrôle\" — empowerment, émotion forte, plans serrés sur les visages. Résultat pré-comité : recalé. Jugé \"trop Headspace\", pas différenciant.\n• Territoire C : \"Vivant·e\" — biomimétisme, analogies physiologiques, esthétique documentaire. En discussion."
+      },
+      {
+        "titre": "Ce que Jakob Rein attend",
+        "contenu": "1. Indicateurs d'engagement mesurables par format\n2. Cohérence identitaire prouvée sur 3 canaux\n3. Différenciation argumentée vs Withings et Calm\n4. Budget créatif et ROI attendu à 6 mois"
+      }
+    ]
+  },
+  {
+    "id": "veille",
+    "title": "Veille concurrentielle",
+    "tab": "Veille concurrentielle",
+    "accent": "#1a6641",
+    "type": "rich",
+    "pages": [
+      {
+        "kicker": "Lundi 14 avril 2025",
+        "title": "Veille concurrentielle",
+        "blocks": [
+          {
+            "type": "p",
+            "text": "Veille créative — Secteur wellness & medtech grand public · Avril 2027\nYassine Morel, Content Manager Lumio Health"
+          },
+          {
+            "type": "h3",
+            "text": "TERRITOIRES SATURÉS"
+          },
+          {
+            "type": "p",
+            "text": "• \"L'instant présent\" : Calm, Headspace, Petit Bambou. Visuels : nature, respiration, tons pastels. Problème : association immédiate à la méditation/spiritualité. Incompatible avec notre positionnement scientifique."
+          },
+          {
+            "type": "p",
+            "text": "• \"Performance et récupération\" : Whoop, Garmin Health, Oura. Visuels : sport, données biométriques affichées, athlètes. Problème : capte les sportifs, pas les actifs stressés en entreprise."
+          },
+          {
+            "type": "p",
+            "text": "• \"Technologie douce\" : Withings, Samsung Health. Visuels : blanc épuré, famille, quotidien. Problème : générique, manque de proposition de valeur émotionnelle forte."
+          },
+          {
+            "type": "h3",
+            "text": "ESPACES LIBRES"
+          },
+          {
+            "type": "p",
+            "text": "• Territoire \"Lucidité\" : la conscience de soi comme acte de résistance au bruit du monde. Personne ne l'occupe dans le medtech francophone. Fort potentiel éditorial (LinkedIn, newsletters)."
+          },
+          {
+            "type": "p",
+            "text": "• Territoire \"Preuve vivante\" : montrer des vrais utilisateurs avec leurs vraies données, sans mise en scène. Esthétique documentaire. Proche de ce que fait Patagonia sur l'environnement — appliqué au corps."
+          },
+          {
+            "type": "p",
+            "text": "• Territoire \"Pour les autres\" : renverser le discours (ce n'est pas pour toi, c'est pour ceux que tu aimes). Potentiellement viral, risque de récupération."
+          },
+          {
+            "type": "h3",
+            "text": "SIGNAL FAIBLE À SURVEILLER"
+          },
+          {
+            "type": "p",
+            "text": "Trois marques lifestyle (dont une française) ont lancé en 2027 des campagnes sur le \"slow stress\" — oxymore volontaire pour réhabiliter une forme de stress moteur. À suivre avant que ça devienne mainstream."
+          }
+        ]
+      }
+    ]
+  }
+];
+  D.guide = {
+  "tips": [
+    {
+      "day": "Acte 1",
+      "title": "Brief Opération PULSE — Lancement Lumio Arc Grand…",
+      "body": "Document fondateur de la mise en situation. Présente la proposition de valeur de Lumio Health, les caractéristiques de la cible grand public, les contraintes identitaires de la marque, les canaux prioritaires retenus et les livrables créatifs attendus pour le 2 juin. Sert de boussole pour l'ensemble des compétences."
+    },
+    {
+      "day": "Acte 1",
+      "title": "Résultats quali — Baromètre stress & bien-être co…",
+      "body": "Nourrit la compétence C.20-III en fournissant les insights consommateurs nécessaires à la construction des axes générateurs. Révèle trois tensions profondes : le déni du stress, la méfiance envers la technologie intrusive et le besoin de preuves scientifiques accessibles."
+    },
+    {
+      "day": "Acte 2",
+      "title": "Benchmark créatif secteur wellness & medtech — Te…",
+      "body": "Alimente la compétence C.21-III en cartographiant les codes créatifs déjà exploités par Withings, Fitbit, Calm et Headspace. Identifie les formats innovants encore peu investis dans l'espace medtech francophone, ouvrant des pistes de différenciation."
+    },
+    {
+      "day": "Acte 2",
+      "title": "RE: PULSE — Exigences Northgate Capital sur le vo…",
+      "body": "Introduit une contrainte narrative majeure : Jakob Rein (Northgate) exige que le dispositif créatif intègre des mécaniques de mesure d'impact explicites et que la crédibilité scientifique soit préservée dans tous les formats. Crée une tension productive entre audace créative et rigueur medtech."
+    },
+    {
+      "day": "Acte 3",
+      "title": "Retours réunion transversale B2B/B2C — Contrainte…",
+      "body": "Précise les garde-fous créatifs issus des partenaires B2B existants (mutuelles, DRH) : certains codes visuels et narratifs doivent rester compatibles avec les usages professionnels pour ne pas fragiliser les contrats en cours. Complexifie l'équilibre entre audace grand public et sobriété corporate."
+    },
+    {
+      "day": "Acte 3",
+      "title": "Premières directions artistiques explorées — Lumi…",
+      "body": "Fournit une base visuelle et narrative incomplète que l'apprenant doit critiquer, enrichir ou réorienter dans sa production C.22-III. Propose trois univers graphiques : biomimétisme, minimalisme data-viz, et réalisme émotionnel. Déclenche une prise de position créative."
+    },
+    {
+      "day": "Acte 4",
+      "title": "Questions préalables à la présentation du 14 avri…",
+      "body": "Liste cinq questions précises de l'investisseur sur la stratégie créative : différenciation, indicateurs d'engagement attendus, cohérence identitaire, innovation format et budget créatif. Structure implicitement les critères d'évaluation du jury et pousse l'apprenant à anticiper les objections."
+    },
+    {
+      "day": "Acte 5",
+      "title": "Dernier brief avant remise — Points de vigilance …",
+      "body": "Rappel urgent de Sonia la veille de la remise : deux axes générateurs ont été rejetés en pré-comité car jugés 'trop génériques' et 'déjà vus chez Calm'. L'apprenant doit en tenir compte dans sa note finale et démontrer la singularité de ses propositions. Crée une pression temporelle et qualitative réaliste."
+    }
+  ]
+};
+  D.portraits = [
+  {
+    "key": "theo_marczak",
+    "title": "Théo Marczak",
+    "file": "portraits/portrait_theo_marczak.html"
+  },
+  {
+    "key": "sonia_ferracci",
+    "title": "Sonia Ferracci",
+    "file": "portraits/portrait_sonia_ferracci.html"
+  },
+  {
+    "key": "camille_ott",
+    "title": "Camille Ott",
+    "file": "portraits/portrait_camille_ott.html"
+  },
+  {
+    "key": "jakob_rein",
+    "title": "Jakob Rein",
+    "file": "portraits/portrait_jakob_rein.html"
+  },
+  {
+    "key": "yassine_morel",
+    "title": "Yassine Morel",
+    "file": "portraits/portrait_yassine_morel.html"
+  }
+];
+  D.finder = D.finder || { folders: {}, order: [] };
+  D.finder.folders.portraits = {
+  "title": "Portraits",
+  "sidebar": "👥 Portraits",
+  "icon": "👥",
+  "items": [
+    {
+      "kind": "portrait",
+      "name": "Théo Marczak",
+      "app": "browser",
+      "props": {
+        "openPortrait": "theo_marczak"
+      }
+    },
+    {
+      "kind": "portrait",
+      "name": "Sonia Ferracci",
+      "app": "browser",
+      "props": {
+        "openPortrait": "sonia_ferracci"
+      }
+    },
+    {
+      "kind": "portrait",
+      "name": "Camille Ott",
+      "app": "browser",
+      "props": {
+        "openPortrait": "camille_ott"
+      }
+    },
+    {
+      "kind": "portrait",
+      "name": "Jakob Rein",
+      "app": "browser",
+      "props": {
+        "openPortrait": "jakob_rein"
+      }
+    },
+    {
+      "kind": "portrait",
+      "name": "Yassine Morel",
+      "app": "browser",
+      "props": {
+        "openPortrait": "yassine_morel"
+      }
+    }
+  ]
+};
+  if (D.finder.order.indexOf('portraits') === -1) {
+    var gIdx = D.finder.order.indexOf('guide');
+    D.finder.order.splice(gIdx >= 0 ? gIdx + 1 : 0, 0, 'portraits');
+  }
+})();
+// === [Chantier PDF+Browser] fin ===
