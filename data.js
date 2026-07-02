@@ -191,6 +191,18 @@ window.LUMIO_DATA = {
     },
     "order": ["guide", "espace"]
   }
+,
+  voiceMemos: [
+    {
+      title: "Ce que mes clients B2B me remontent sur le lancement",
+      author: "Camille Ott",
+      role: "Responsable partenariats B2B",
+      date: "",
+      context: "Verbatim terrain",
+      durationSec: 45,
+      transcript: "Honnêtement, ce qui me préoccupe dans ce lancement, c'est pas le créatif. Mes clients B2B, les DRH que j'ai au téléphone depuis 8 ans — ils commencent à me poser des questions. \"Est-ce que Lumio va devenir une appli grand public comme les autres ?\" \"Est-ce que nos données vont servir à cibler des pubs ?\" Je sais que la réponse est non, mais si la campagne envoie des signaux ambigus sur le positionnement de la marque, j'ai un problème commercial concret. Ce que j'attends du dispositif créatif, c'est qu'un DRH qui le voit ne soit pas mal à l'aise de parler de Lumio à ses salariés. C'est peut-être pas le brief le plus excitant, mais c'est mon brief réel."
+    }
+  ]
 };
 
 window.PAC_CONFIG = {
