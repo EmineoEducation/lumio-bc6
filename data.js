@@ -1059,3 +1059,19 @@ window.PASS_CONFIG = window.PAC_CONFIG;
   }
 })();
 // === [Chantier PDF+Browser] fin ===
+
+// === [Carte portfolio] — 05/08/2026 · contenu propre au bloc, ajout non destructif ===
+(function () {
+  var c = window.PAC_CONFIG || window.PASS_CONFIG;
+  if (!c) return;
+  c.portfolio = {
+    missionTitre: "Donner une voix créative au lancement grand public",
+    miseEnSituation: "La gamme sort du cadre B2B pour s'adresser au grand public. Il faut construire des axes de contenus et des formats capables de parler d'un sujet intime — le stress — sans verser dans le discours médical anxiogène ni dans le vocabulaire du bien-être, déjà saturé par la concurrence.",
+    choix: "Un territoire de contenus fondé sur les signaux du corps plutôt que sur la performance : des formats courts de facture documentaire, ancrés dans des situations de travail réelles, déclinés en priorité sur les canaux où l'attention est longue.",
+    justification: "Ce parti pris distingue la marque d'un marché saturé de promesses de performance tout en restant dans ce que les données de l'objet permettent d'affirmer — condition pour que le discours tienne encore quand la réglementation santé se resserre.",
+    imageSrc: ""
+  };
+  window.PAC_CONFIG = c;
+  window.PASS_CONFIG = c;
+})();
+// === [Carte portfolio] fin ===
