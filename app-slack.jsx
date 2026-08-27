@@ -7,6 +7,36 @@
 const { useState: useSlackState, useEffect: useSlackEffect, useRef: useSlackRef } = React;
 
 // ══════════════════════════════════════════════════════════════
+// F39 · RÉSEAU INSTABLE
+// Les étudiants travaillent sur leurs propres machines, en partage de
+// connexion mobile. Sur un réseau qui tombe une seconde, `fetch` échoue
+// franchement : la requête n'atteint jamais le serveur, elle n'apparaît
+// donc dans aucun journal côté Vercel, et le personnage se taisait — ce
+// qui, du poste de l'encadrant sur une connexion stable, était
+// impossible à reproduire.
+// Correctif : trois tentatives espacées avant d'abandonner. Une coupure
+// d'une ou deux secondes devient invisible pour l'étudiant·e.
+// Bloc générique et idempotent.
+// ══════════════════════════════════════════════════════════════
+if (!window.PAC_FETCH) {
+  window.PAC_FETCH = async function (url, options, essais) {
+    const max = essais == null ? 3 : essais;
+    let derniere = null;
+    for (let i = 0; i < max; i++) {
+      try {
+        return await fetch(url, options);
+      } catch (e) {
+        derniere = e;
+        console.warn('PAC_FETCH — tentative ' + (i + 1) + '/' + max + ' échouée', e);
+        if (i < max - 1) await new Promise(r => setTimeout(r, 800 * (i + 1)));
+      }
+    }
+    throw derniere;
+  };
+}
+
+
+// ══════════════════════════════════════════════════════════════
 // F33 · PAC_PERSIST — sauvegarde incrémentale de l'état applicatif
 // ──────────────────────────────────────────────────────────────
 // Avant F33, seuls l'identité et le timerStart survivaient à un reload :
@@ -38,7 +68,7 @@ if (!window.PAC_PERSIST) {
       var id = sid();
       if (!id) return Promise.resolve(false);
       var payload = {}; payload[slot] = value;
-      return fetch('/api/session', {
+      return window.PAC_FETCH('/api/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: id, session: payload })
@@ -76,7 +106,7 @@ if (!window.PAC_PERSIST) {
         var id = sid();
         if (!id) return Promise.resolve(null);
         if (!pending) {
-          pending = fetch('/api/session?id=' + encodeURIComponent(id))
+          pending = window.PAC_FETCH('/api/session?id=' + encodeURIComponent(id))
             .then(function (r) { return r.status === 404 ? null : r.json(); })
             .then(function (j) { return (j && j.session) || null; })
             .catch(function () { return null; });
@@ -365,7 +395,7 @@ function SlackApp({ openChannel }) {
       const prompt = `${buildSlackLivrablePrompt(primaryName, primaryRole, cfg)}\n\nProduction reçue :\n${livrableResume}`;
       const info = castOf(primaryName);
       try {
-        const resp = await fetch('/api/chat', {
+        const resp = await window.PAC_FETCH('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 400, messages: [{ role: 'user', content: prompt }] })
@@ -429,7 +459,7 @@ function SlackApp({ openChannel }) {
           `${m.isMe ? studentName.split(' ')[0] : cibleFirst}: ${m.text}`
         ).join('\n');
         const userPrompt = `${history}\n${studentName.split(' ')[0]}: ${text}\n\nRéponds maintenant en tant que ${cible.name} (2-3 messages courts séparés par ---SPLIT---).`;
-        const resp = await fetch('/api/chat', {
+        const resp = await window.PAC_FETCH('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
