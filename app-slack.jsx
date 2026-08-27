@@ -6,6 +6,87 @@
 // ══════════════════════════════════════════════════════════════
 const { useState: useSlackState, useEffect: useSlackEffect, useRef: useSlackRef } = React;
 
+// ══════════════════════════════════════════════════════════════
+// F33 · PAC_PERSIST — sauvegarde incrémentale de l'état applicatif
+// ──────────────────────────────────────────────────────────────
+// Avant F33, seuls l'identité et le timerStart survivaient à un reload :
+// la conversation Slack et la saisie du livrable vivaient uniquement en
+// state React et disparaissaient au moindre rechargement.
+// Ce helper écrit des tranches nommées dans la session Redis existante.
+// api/session.js FUSIONNE l'objet reçu avec l'existant : envoyer une
+// tranche seule n'écrase donc jamais studentName / timerStart / phase.
+// Bloc générique et idempotent — défini par le premier fichier chargé
+// (app-slack.jsx), réutilisé tel quel par app-livrable.jsx.
+// ══════════════════════════════════════════════════════════════
+if (!window.PAC_PERSIST) {
+  window.PAC_PERSIST = (function () {
+    var timers = {};
+    var pending = null;
+    var state = { ok: null, lastSaved: null, lastError: null };
+    var listeners = [];
+
+    var sid = function () {
+      try { return localStorage.getItem('lumio_sid') || null; } catch (e) { return null; }
+    };
+    var notify = function () { listeners.forEach(function (f) { try { f(state); } catch (e) {} }); };
+
+    // Appel réseau direct plutôt que window.LUMIO_SESSION : le helper de
+    // main.jsx avale les erreurs dans un console.warn et renvoie null quoi
+    // qu'il arrive. Or un échec de sauvegarde silencieux est exactement le
+    // scénario qui coûte des heures de travail — il doit être visible.
+    var write = function (slot, value) {
+      var id = sid();
+      if (!id) return Promise.resolve(false);
+      var payload = {}; payload[slot] = value;
+      return fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, session: payload })
+      }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        state.ok = true; state.lastSaved = Date.now(); state.lastError = null;
+        notify(); return true;
+      }).catch(function (e) {
+        state.ok = false; state.lastError = String(e && e.message || e);
+        console.warn('PAC_PERSIST — échec de sauvegarde (' + slot + ') :', e);
+        notify(); return false;
+      });
+    };
+
+    return {
+      sid: sid,
+      status: function () { return state; },
+      onChange: function (f) {
+        listeners.push(f);
+        return function () { listeners = listeners.filter(function (x) { return x !== f; }); };
+      },
+      // Écriture différée : une seule requête après 1,2 s sans frappe.
+      save: function (slot, value, delay) {
+        if (!sid()) return;
+        clearTimeout(timers[slot]);
+        timers[slot] = setTimeout(function () { write(slot, value); }, delay == null ? 1200 : delay);
+      },
+      // Écriture immédiate : fermeture d'onglet, remise du livrable.
+      flush: function (slot, value) {
+        clearTimeout(timers[slot]);
+        return write(slot, value);
+      },
+      // Lecture : un seul GET partagé par toutes les apps au montage.
+      load: function () {
+        var id = sid();
+        if (!id) return Promise.resolve(null);
+        if (!pending) {
+          pending = fetch('/api/session?id=' + encodeURIComponent(id))
+            .then(function (r) { return r.status === 404 ? null : r.json(); })
+            .then(function (j) { return (j && j.session) || null; })
+            .catch(function () { return null; });
+        }
+        return pending;
+      }
+    };
+  })();
+}
+
 // ─── Casting Lumio Health — repères visuels de repli ─────────
 // Utilisé seulement si D.personnages ne fournit pas déjà avatar/couleur/rôle
 // pour la personne concernée. N'importe quel nom absent de cette table
@@ -119,9 +200,16 @@ function SlackApp({ openChannel }) {
 
   const studentName = (D && D.student && D.student.name) || 'Lou Bertrand';
 
-  // ── Seed initial depuis D.slackMessages ──
-  useSlackEffect(() => {
-    if (Object.keys(chatHistory).length > 0) return;
+  // ══ F33 · Restauration puis initialisation ══════════════════
+  // Le seed n'est plus posé d'emblée : on lit d'abord la session, et
+  // s'il existe une conversation sauvegardée, elle prime.
+  // `hydrated` interdit toute écriture tant que la lecture n'a pas eu
+  // lieu ; `restored` indique qu'on est reparti d'une session existante
+  // (il sert à ne pas rejouer les messages différés, voir plus bas).
+  const [hydrated, setHydrated] = useSlackState(false);
+  const [restored, setRestored] = useSlackState(false);
+
+  const buildSeed = () => {
     const seed = {};
     seed[primaryId] = (slackSeed.initial || []).map(m => {
       const info = castOf(m.from);
@@ -130,11 +218,63 @@ function SlackApp({ openChannel }) {
     seed.general = [
       { from: 'lumio-bot', avatar: '🤖', color: '#9a9ea8', time: '08:00', text: '☀️ Bonjour à tous · 18 personnes connectées ce matin' }
     ];
-    setChatHistory(seed);
+    return seed;
+  };
+
+  useSlackEffect(() => {
+    let annule = false;
+    window.PAC_PERSIST.load().then(session => {
+      if (annule) return;
+      const s = (session && session.slack) || null;
+      if (s && s.history && Object.keys(s.history).length) {
+        setChatHistory(s.history);
+        if (s.unreads) setUnreads(s.unreads);
+        const n = s.exchangeCount || 0;
+        setExchangeCountLocal(n);
+        setRestored(true);
+        // Rejoue le compteur pour que desktop.jsx redéverrouille le
+        // livrable : l'état `livrableUnlocked` en dépend et n'est pas
+        // persisté de son côté.
+        if (n > 0 && window.__onSlackExchange) {
+          try { window.__onSlackExchange(n); } catch (e) {}
+        }
+      } else {
+        setChatHistory(buildSeed());
+      }
+      setHydrated(true);
+    });
+    return () => { annule = true; };
   }, []);
 
-  // ── Révélation différée des messages "delayed" ──
+  // Sauvegarde différée à chaque évolution du fil.
   useSlackEffect(() => {
+    if (!hydrated) return;
+    window.PAC_PERSIST.save('slack', {
+      history: chatHistory, unreads, exchangeCount, savedAt: Date.now()
+    });
+  }, [hydrated, chatHistory, unreads, exchangeCount]);
+
+  // Filet : écriture immédiate si l'onglet se ferme.
+  useSlackEffect(() => {
+    const bye = () => {
+      if (!hydrated) return;
+      window.PAC_PERSIST.flush('slack', {
+        history: chatHistory, unreads, exchangeCount, savedAt: Date.now()
+      });
+    };
+    window.addEventListener('beforeunload', bye);
+    return () => window.removeEventListener('beforeunload', bye);
+  }, [hydrated, chatHistory, unreads, exchangeCount]);
+  // ══ fin F33 ═════════════════════════════════════════════════
+
+  // ── Révélation différée des messages "delayed" ──
+  // F33 · Ces messages arrivent 8 à 30 s après le montage. Sur une
+  // session restaurée ils sont déjà dans l'historique : sans le garde-fou
+  // `restored`, un simple rechargement les ferait apparaître en double.
+  // L'effet n'est donc armé qu'une fois la session lue, et seulement
+  // lorsqu'on repart d'un seed neuf.
+  useSlackEffect(() => {
+    if (!hydrated || restored) return;
     const list = slackSeed.delayed || [];
     const timers = list.map((m, i) => {
       const match = /(\d+)\s*min/i.exec(m.time || '');
@@ -148,7 +288,7 @@ function SlackApp({ openChannel }) {
       }, realDelayMs);
     });
     return () => timers.forEach(t => clearTimeout(t));
-  }, []);
+  }, [hydrated, restored]);
 
   useSlackEffect(() => {
     if (openChannel) { setActive(openChannel); setUnreads(u => ({ ...u, [openChannel]: 0 })); }
