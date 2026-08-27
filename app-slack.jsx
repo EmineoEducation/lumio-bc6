@@ -149,6 +149,33 @@ function buildSlackLivrablePrompt(primaryName, role, cfg) {
   return `Tu es ${primaryName}, ${role} chez Lumio Health. Le/la consultant·e externe vient de soumettre sa production pour "${titre}". Tu la parcours rapidement et tu réagis en Slack : dis si ça tient la route par rapport à ce que tu attendais, ce qui te convainc ou t'interroge encore, puis termine par la question exigeante que tu poserais avant de la valider. 2 à 3 messages séparés par "---SPLIT---", 120 mots maximum cumulés. Ne commence jamais par "Bonjour" ou "Merci".`;
 }
 
+// ══════════════════════════════════════════════════════════════
+// F35 · INTERLOCUTEURS MUETS
+// Seule la persona commanditaire était branchée sur l'IA. Les autres
+// personnages apparaissaient dans la liste des messages directs, certains
+// invitaient même à leur écrire, mais ne pouvaient jamais répondre :
+// l'étudiant·e attendait indéfiniment. Chacun répond désormais, dans son
+// rôle, à partir des données du bloc.
+// ══════════════════════════════════════════════════════════════
+const buildSecondairePrompt = (nom, role, cfg) => {
+  return `Tu es ${nom}${role ? ', ' + role : ''} chez Lumio Health.
+
+Tu échanges en messagerie interne avec un·e consultant·e externe missionné·e sur ${cfg.titre || cfg.epreuve || 'la mission en cours'}. Tu n'es pas le commanditaire : tu es un collègue, une source de terrain. Tu réponds volontiers.
+
+Règles de conduite, non négociables :
+- Tu réponds TOUJOURS à la question posée, avec ce que tu sais de ton poste et de ton point de vue.
+- Tu ne renvoies JAMAIS vers quelqu'un d'autre sans avoir d'abord donné ta propre réponse.
+- Tu ne dis jamais que tu ne peux pas aider, ni que ce n'est pas ton sujet.
+- Si tu ignores quelque chose, tu le dis franchement et tu expliques pourquoi.
+- Tu ne demandes jamais d'attendre : tu donnes ta réponse maintenant.
+- Tu parles depuis ton expérience concrète, avec des exemples, pas en généralités.
+- Tu peux poser une question en retour, mais seulement après avoir répondu.
+
+Style : messagerie interne. Phrases courtes, ton direct et humain, aucune formule de politesse.
+
+Format : 2 à 3 messages courts séparés par "---SPLIT---". Chaque message 1 à 3 phrases. 150 mots cumulés maximum. Ne commence jamais par "Bonjour".`;
+};
+
 function SlackApp({ openChannel }) {
   const D = window.LUMIO_DATA;
   const cfg = window.PAC_CONFIG || window.PASS_CONFIG || {};
@@ -351,8 +378,8 @@ function SlackApp({ openChannel }) {
           await new Promise(r => setTimeout(r, delay));
           const t = new Date();
           const tt = `${t.getHours().toString().padStart(2, '0')}:${t.getMinutes().toString().padStart(2, '0')}`;
-          setChatHistory(h => ({ ...h, [primaryId]: [...(h[primaryId] || []), { from: primaryName, avatar: info.avatar, color: info.color, time: tt, text: reply }] }));
-          if (activeIdRef.current !== primaryId) setUnreads(u => ({ ...u, [primaryId]: (u[primaryId] || 0) + 1 }));
+          setChatHistory(h => ({ ...h, [cible.id]: [...(h[cible.id] || []), { from: cible.name, avatar: info.avatar, color: info.color, time: tt, text: reply }] }));
+          if (activeIdRef.current !== cible.id) setUnreads(u => ({ ...u, [cible.id]: (u[cible.id] || 0) + 1 }));
           delay = 1200 + reply.length * 8;
         }
       } catch (e) {
@@ -378,7 +405,12 @@ function SlackApp({ openChannel }) {
     const userMsg = { from: studentName, avatar: studentInitial, color: '#1a2436', time, text, isMe: true };
     setChatHistory(h => ({ ...h, [activeId]: [...(h[activeId] || []), userMsg] }));
 
-    if (!isPrimary) return; // seule la persona commanditaire répond via l'IA
+    // F35 · Tout interlocuteur répond, plus seulement le commanditaire.
+    const cible = dms.find(d => d.id === activeId);
+    if (!cible) return;
+    const estCommanditaire = activeId === primaryId;
+    const cibleRole = castOf(cible.name).role || '';
+    const cibleFirst = cible.name.split(' ')[0];
 
     const newCount = exchangeCount + 1;
     setExchangeCountLocal(newCount);
@@ -387,19 +419,25 @@ function SlackApp({ openChannel }) {
 
     setSending(true);
     setTimeout(async () => {
-      const info = castOf(primaryName);
+      const info = castOf(cible.name);
       try {
-        const history = (chatHistory[primaryId] || []).map(m =>
-          `${m.isMe ? studentName.split(' ')[0] : primaryFirst}: ${m.text}`
+        // F36 · L'historique complet du fil partait dans le prompt à chaque
+        // message et gonflait sans limite : passé un certain volume, la
+        // réponse dépassait la durée maximale de la fonction Vercel et
+        // l'appel échouait. On ne transmet plus que les 16 derniers.
+        const history = (chatHistory[activeId] || []).slice(-16).map(m =>
+          `${m.isMe ? studentName.split(' ')[0] : cibleFirst}: ${m.text}`
         ).join('\n');
-        const userPrompt = `${history}\n${studentName.split(' ')[0]}: ${text}\n\nRéponds maintenant en tant que ${primaryName} (2-3 messages courts séparés par ---SPLIT---).`;
+        const userPrompt = `${history}\n${studentName.split(' ')[0]}: ${text}\n\nRéponds maintenant en tant que ${cible.name} (2-3 messages courts séparés par ---SPLIT---).`;
         const resp = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model: 'claude-sonnet-4-6',
             max_tokens: 500,
-            system: buildSlackEvalPrompt(primaryName, primaryRole, cfg, D) + (window.__pacSessionBrief ? window.__pacSessionBrief() : ''),
+            system: estCommanditaire
+              ? buildSlackEvalPrompt(primaryName, primaryRole, cfg, D) + (window.__pacSessionBrief ? window.__pacSessionBrief() : '')
+              : buildSecondairePrompt(cible.name, cibleRole, cfg),
             messages: [{ role: 'user', content: userPrompt }]
           })
         });
@@ -415,13 +453,16 @@ function SlackApp({ openChannel }) {
           await new Promise(r => setTimeout(r, delay));
           const t = new Date();
           const tt = `${t.getHours().toString().padStart(2, '0')}:${t.getMinutes().toString().padStart(2, '0')}`;
-          setChatHistory(h => ({ ...h, [primaryId]: [...(h[primaryId] || []), { from: primaryName, avatar: info.avatar, color: info.color, time: tt, text: reply }] }));
-          if (activeIdRef.current !== primaryId) setUnreads(u => ({ ...u, [primaryId]: (u[primaryId] || 0) + 1 }));
+          setChatHistory(h => ({ ...h, [cible.id]: [...(h[cible.id] || []), { from: cible.name, avatar: info.avatar, color: info.color, time: tt, text: reply }] }));
+          if (activeIdRef.current !== cible.id) setUnreads(u => ({ ...u, [cible.id]: (u[cible.id] || 0) + 1 }));
           delay = 1400 + reply.length * 8;
         }
       } catch (e) {
-        setChatHistory(h => ({ ...h, [primaryId]: [...(h[primaryId] || []), { from: primaryName, avatar: info.avatar, color: info.color, time: 'maintenant', text: 'Souci réseau. Renvoie-moi ça directement.' }] }));
-        if (activeIdRef.current !== primaryId) setUnreads(u => ({ ...u, [primaryId]: (u[primaryId] || 0) + 1 }));
+        // F36 · Le texte de secours part désormais dans le bon fil, invite
+        // explicitement à relancer, et l'erreur réelle est tracée.
+        console.error('Slack · échec de réponse (' + activeId + ')', e);
+        setChatHistory(h => ({ ...h, [cible.id]: [...(h[cible.id] || []), { from: cible.name, avatar: info.avatar, color: info.color, time, text: "Mon message n'est pas passé — renvoie-moi ta question, je suis là." }] }));
+        if (activeIdRef.current !== cible.id) setUnreads(u => ({ ...u, [cible.id]: (u[cible.id] || 0) + 1 }));
       } finally {
         setSending(false);
       }
@@ -500,16 +541,17 @@ function SlackApp({ openChannel }) {
               </div>
             </div>
           ))}
-          {sending && isPrimary && (
+          {sending && dms.some(d => d.id === activeId) && (
             <div style={slackStyles.message}>
-              <div style={{ ...slackStyles.msgAvatar, background: primaryInfo.color }}>{primaryInfo.avatar}</div>
+              {/* F35 · L'indicateur affichait toujours le commanditaire. */}
+              <div style={{ ...slackStyles.msgAvatar, background: (dms.find(d => d.id === activeId) || primaryInfo).color }}>{(dms.find(d => d.id === activeId) || primaryInfo).avatar}</div>
               <div>
                 <div style={{ display: 'flex', gap: 4, padding: '6px 0' }}>
                   <span style={slackStyles.typeDot} />
                   <span style={{ ...slackStyles.typeDot, animationDelay: '0.15s' }} />
                   <span style={{ ...slackStyles.typeDot, animationDelay: '0.3s' }} />
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--ink-faint)' }}>{primaryFirst} est en train d'écrire…</div>
+                <div style={{ fontSize: 11, color: 'var(--ink-faint)' }}>{((dms.find(d => d.id === activeId) || {}).name || primaryName).split(' ')[0]} est en train d'écrire…</div>
               </div>
             </div>
           )}
@@ -521,8 +563,8 @@ function SlackApp({ openChannel }) {
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder={isPrimary
-                ? `Écris à ${primaryFirst}…  (Entrée pour envoyer)`
+              placeholder={dms.some(d => d.id === activeId)
+                ? `Écris à ${(dms.find(d => d.id === activeId) || {}).name.split(' ')[0]}…  (Entrée pour envoyer)`
                 : `Message ${activeMeta?.type === 'channel' ? '#' + activeMeta?.name : activeMeta?.name}`}
               style={slackStyles.textarea}
               rows={2}
