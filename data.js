@@ -23,7 +23,7 @@ window.LUMIO_DATA = {
     "fromEmail": "sonia@lumio-health.com",
     "subject": "Opération PULSE — Lancement créatif de la gamme Lumio Arc pour le grand public",
     "date": "Lundi 14 avril 2025",
-    "body": "{{PRENOM}},\n\nLumio Health, jusqu'ici positionnée exclusivement en B2B auprès des DRH et mutuelles, franchit un cap stratégique : le lancement de la Lumio Arc, un wearable anti-stress destiné au grand public connecté et urbain (25-45 ans, CSP+). Le CEO Théo Marczak a fixé une date de lancement officielle au 2 juin 2025, journée mondiale de la santé mentale au travail. La directrice marketing Sonia Ferracci dispose de trois semaines pour produire une stratégie créative complète — axes générateurs, idées de contenus et premières réalisations — à présenter au jury interne élargi au partenaire investisseur Northgate Capital, représenté par Jakob Rein, qui conditionne son second tour de table à la cohérence et à l'impact attendu du dispositif créatif.\n\nEnjeu : Construire une stratégie créative de marque différenciante, capable de translater l'expertise medtech de Lumio en émotion grand public, tout en préservant la crédibilité scientifique attendue par les investisseurs et les futurs partenaires B2B2C.\n\n— Sonia Ferracci\nDirectrice Marketing Lumio Health"
+    "body": "{{PRENOM}},\n\nLumio Health, jusqu'ici positionnée exclusivement en B2B auprès des DRH et mutuelles, franchit un cap stratégique : le lancement de la Lumio Arc, un wearable anti-stress destiné au grand public connecté et urbain (25-45 ans, CSP+). Le CEO Théo Marczak a fixé une date de lancement officielle au 2 juin 2025, journée mondiale de la santé mentale au travail. La directrice marketing Sonia Ferracci dispose de trois semaines pour produire une stratégie créative complète — axes générateurs, idées de contenus et premières réalisations — à présenter au jury interne élargi au partenaire investisseur Northgate Capital, représenté par Jakob Rein, qui conditionne son second tour de table à la cohérence et à l'impact attendu du dispositif créatif.\n\nTout le dossier PULSE est déjà sur votre poste : Finder, dossier « Espace de travail », numéroté de 01 à 10. Le moodboard de SHIFT est une version de travail — deux univers y sont déjà recalés.\n\nEnjeu : Construire une stratégie créative de marque différenciante, capable de translater l'expertise medtech de Lumio en émotion grand public, tout en préservant la crédibilité scientifique attendue par les investisseurs et les futurs partenaires B2B2C.\n\n— Sonia Ferracci\nDirectrice Marketing Lumio Health"
   },
   "jakobEmail": {
     "from": "Sonia Ferracci",
@@ -156,6 +156,12 @@ window.LUMIO_DATA = {
         "time": "08:32",
         "text": "{{PRENOM}} — Construire une stratégie créative de marque différenciante, capable de translater l'expertise medtech de Lumio en émotion grand public, tout en préservant la crédibilité scientifique attendue par les investisseurs et les futurs partenaires B2B2C.",
         "read": true
+      },
+      {
+        "from": "Sonia Ferracci",
+        "time": "08:34",
+        "text": "Tout le dossier est dans le Finder de ton poste, dossier « Espace de travail », numéroté dans l'ordre. Dix pièces, dont le moodboard de SHIFT — attention, c'est une version de travail, deux univers y sont déjà recalés.",
+        "read": true
       }
     ],
     "delayed": [
@@ -179,13 +185,25 @@ window.LUMIO_DATA = {
         ]
       },
       "espace": {
-        "title": "Espace de travail",
+        "title": "Espace de travail — dossier Opération PULSE",
         "sidebar": "Espace de travail",
         "icon": "📁",
         "items": [
-          { "kind": "mail", "name": "Boîte mail", "app": "mail", "props": {} },
-          { "kind": "note", "name": "Notes", "app": "notes", "props": {} },
-          { "kind": "audio", "name": "Mémos vocaux", "app": "voice", "props": {} }
+          { "kind": "mail",  "label": "MAIL", "name": "00 — Brief de mission (Sonia Ferracci)",        "app": "mail",    "props": { "openId": "brief" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "01 — Brief créatif Opération PULSE",            "app": "pdf",     "props": { "openDoc": "DOC-01" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "02 — Baromètre stress 2025 (panel 800)",        "app": "pdf",     "props": { "openDoc": "DOC-02" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "03 — Benchmark créatif wellness & medtech",     "app": "pdf",     "props": { "openDoc": "DOC-03" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "04 — Exigences Northgate sur le volet créatif", "app": "pdf",     "props": { "openDoc": "DOC-04" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "05 — Retours réunion transversale B2B/B2C",     "app": "pdf",     "props": { "openDoc": "DOC-05" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "06 — Directions artistiques SHIFT (v1.4)",      "app": "pdf",     "props": { "openDoc": "DOC-06" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "07 — Questions préalables Northgate",           "app": "pdf",     "props": { "openDoc": "DOC-07" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "08 — Dernier brief avant remise",               "app": "pdf",     "props": { "openDoc": "DOC-08" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "09 — Présentation CODIR",                       "app": "pdf",     "props": { "openDoc": "deck-board" } },
+          { "kind": "pdf",   "label": "PDF",  "name": "10 — Veille concurrentielle",                   "app": "pdf",     "props": { "openDoc": "veille" } },
+          { "kind": "doc",   "label": "NOTE", "name": "Note interne T. Marczak",                       "app": "notes",   "props": { "openNote": "theo" } },
+          { "kind": "audio", "label": "M4A",  "name": "Mémo vocal — Camille Ott",                      "app": "voice",   "props": {} },
+          { "kind": "doc",   "label": "WEB",  "name": "Revue de presse",                               "app": "browser", "props": { "openTab": "press-0" } },
+          { "kind": "note",  "label": "TXT",  "name": "Mes notes.txt",                                 "app": "notepad", "props": {} }
         ]
       }
     },
@@ -1075,3 +1093,47 @@ window.PASS_CONFIG = window.PAC_CONFIG;
   window.PASS_CONFIG = c;
 })();
 // === [Carte portfolio] fin ===
+
+// === [F32 · Fichier fantôme] docIndex — 27/08/2026 =============
+// Source de vérité de la LOCALISATION des documents. Lu par app-slack.jsx
+// pour injecter la carte des documents dans le prompt du commanditaire :
+// Sonia ne peut plus renvoyer l'étudiant·e vers un fichier inexistant,
+// ni promettre de « renvoyer » quoi que ce soit.
+// bc6 est le bloc le plus dense du dispositif : dix pièces dans Aperçu,
+// c'est-à-dire dix occasions de bloquer si elles ne sont pas nommées.
+// ⚠️ Toute pièce ajoutée au dossier « Espace de travail » doit être
+// répercutée ici — et réciproquement.
+(function () {
+  var D = window.LUMIO_DATA;
+  if (!D) return;
+
+  // Phrase utilisée par le seed Slack du commanditaire.
+  D.docLocationHint = "Tout le dossier PULSE est dans le Finder de ton poste — dossier « Espace de travail », numéroté dans l'ordre.";
+
+  D.docIndex = [
+    { nom: "Brief de mission (Sonia Ferracci)",                                  ou: "Mail → « Opération PULSE » — aussi dans Finder / Espace de travail" },
+    { nom: "Brief créatif Opération PULSE — lancement Lumio Arc grand public",   ou: "Aperçu (PDF) → onglet « Brief Opération PULSE » (DOC-01)" },
+    { nom: "Baromètre stress & bien-être connecté 2025, panel 800 urbains CSP+", ou: "Aperçu (PDF) → onglet « Résultats quali » (DOC-02)" },
+    { nom: "Benchmark créatif wellness & medtech, territoires saturés et libres", ou: "Aperçu (PDF) → onglet « Benchmark créatif » (DOC-03)" },
+    { nom: "Exigences de Northgate Capital sur le volet créatif",                ou: "Aperçu (PDF) → onglet « RE: PULSE » (DOC-04)" },
+    { nom: "Retours de la réunion transversale B2B/B2C, contraintes identitaires", ou: "Aperçu (PDF) → onglet « Retours réunion transversale » (DOC-05)" },
+    { nom: "Directions artistiques SHIFT Studio, version de travail v1.4",       ou: "Aperçu (PDF) → onglet « Premières directions artistiques » (DOC-06)" },
+    { nom: "Questions préalables de Northgate avant la présentation",            ou: "Aperçu (PDF) → onglet « Questions préalables » (DOC-07)" },
+    { nom: "Dernier brief avant remise, points de vigilance",                    ou: "Aperçu (PDF) → onglet « Dernier brief avant remise » (DOC-08)" },
+    { nom: "Présentation CODIR — stratégie créative de lancement",               ou: "Aperçu (PDF) → onglet « Présentation CODIR »" },
+    { nom: "Veille concurrentielle",                                             ou: "Aperçu (PDF) → onglet « Veille concurrentielle »" },
+    { nom: "Note interne de Théo Marczak",                                       ou: "Notes → « Note interne »" },
+    { nom: "Mémo vocal de Camille Ott sur les remontées clients B2B",            ou: "Mémos vocaux" },
+    { nom: "Revue de presse",                                                    ou: "Safari → onglet déjà ouvert" },
+    { nom: "Portraits presse des 5 dirigeants",                                  ou: "Finder → dossier « Portraits »" },
+    { nom: "Bloc-notes personnel de l'étudiant·e",                               ou: "Bloc-notes (Mes notes.txt)" }
+  ];
+
+  // Pièces que l'étudiant·e est susceptible de réclamer et qui N'EXISTENT PAS.
+  // Le commanditaire doit le dire franchement plutôt que d'envoyer chercher.
+  D.docPrecisions = [
+    "Le moodboard de SHIFT Studio est une version de travail intermédiaire (v1.4) : les univers B et C y sont déjà recalés, et la « quatrième voie » évoquée par l'agence n'a jamais été développée. Il n'existe aucune version ultérieure à consulter — c'est précisément ce que la personne doit produire.",
+    "Il n'existe ni budget média chiffré, ni planning de production détaillé, ni contrat d'agence dans le dossier. Si on te les réclame, dis que ces pièces ne sont pas disponibles et que la proposition doit en tenir compte."
+  ];
+})();
+// === [F32] fin =================================================

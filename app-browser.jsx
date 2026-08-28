@@ -15,6 +15,14 @@ function BrowserApp({ openTab, openPortrait }) {
   const [openedPortraitKeys, setOpenedPortraitKeys] = useStateBrowser(openPortrait ? [openPortrait] : []);
   const [activeTab, setActiveTab] = useStateBrowser(openPortrait ? ('portrait-' + openPortrait) : (openTab || null));
 
+  // F32 · Safari est une fenêtre unique (winSignature → 'browser::single').
+  // Sans cet effet, un clic sur « Revue de presse » depuis le Finder se
+  // contentait de remonter la fenêtre existante sans changer d'onglet :
+  // l'étudiant·e croyait que le lien ne marchait pas.
+  useStateBrowserEffect(() => {
+    if (openTab) setActiveTab(openTab);
+  }, [openTab]);
+
   useStateBrowserEffect(() => {
     if (openPortrait) {
       setOpenedPortraitKeys(keys => keys.includes(openPortrait) ? keys : [...keys, openPortrait]);
